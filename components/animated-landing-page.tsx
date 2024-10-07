@@ -13,6 +13,9 @@ import { VideoHero } from './VideoHero'
 import { EnhancedHero } from './EnhancedHero'
 import { Header } from './Header'
 import { CaseAssessmentForm } from './case-assessment-form'
+import { Statistics } from './Statistics'
+import HeroHeadline from './hero-headline'
+import { QuoteComponent } from './quote-component'
 
 export default function AnimatedLandingPageComponent() {
   const [step, setStep] = useState(1)
@@ -32,11 +35,16 @@ export default function AnimatedLandingPageComponent() {
     visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
   }
 
+  const zoomIn = {
+    hidden: { opacity: 0, scale: 0.5 },
+    visible: { opacity: 1, scale: 1.1, transition: { duration: 3 } }
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-800 text-white">
+    <div className="min-h-screen text-black">
       <Header />
 
-      <main className="container mx-auto px-4 py-16 md:py-24">
+      <main className="container mx-auto px-4">
         <AnimatePresence mode="wait">
           {step === 1 && (
             <motion.div
@@ -46,84 +54,51 @@ export default function AnimatedLandingPageComponent() {
               exit="hidden"
               variants={fadeIn}
             >
-              <EnhancedHero scrollToForm={() => setStep(2)} />
-
-              <motion.p
-                className="text-xl md:text-2xl text-blue-200 mb-8 text-center"
-                variants={slideUp}
-              >
-                We've helped workers like you recover <span className="font-bold text-white">over $100 million</span> in unpaid wages. It's time to get what you deserve.
-              </motion.p>
+              <HeroHeadline />
               <motion.div variants={slideUp} className="flex justify-center">
-                <Button size="lg" className="bg-blue-500 hover:bg-blue-600 text-white rounded-full text-lg px-8 py-4 shadow-lg transform transition-transform duration-200 hover:scale-105" onClick={() => setStep(2)}>
+                <Button size="lg" className="bg-blue-500 mb-10 hover:bg-blue-600 text-white rounded-full text-lg px-8 shadow-lg transform transition-transform duration-200 hover:scale-105" onClick={() => setStep(2)}>
                   Get Started
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </motion.div>
-              <motion.div variants={slideUp} className="mt-8 flex justify-center space-x-4">
-                {[1, 2, 3, 4, 5].map((_, index) => (
-                  <Star key={index} className="h-6 w-6 text-yellow-400 fill-current" />
-                ))}
-              </motion.div>
-              <motion.p variants={slideUp} className="text-blue-200 mt-2 text-center">
-                Rated 4.9/5 by over 1,000 satisfied clients
-              </motion.p>
+              <EnhancedHero scrollToForm={() => setStep(2)} />
 
-              <motion.div variants={slideUp} className="my-16 text-center">
-                <p className="text-blue-200 mb-4">Trusted by workers from:</p>
-                <div className="flex justify-center space-x-8 flex-wrap">
-                  {['amazon.svg', 'walmart.svg', 'target.svg', 'mcdonalds.svg'].map((logo, index) => (
-                    <Image key={index} src={`/logos/${logo}`} alt="Company logo" width={100} height={40} className="grayscale hover:grayscale-0 transition-all duration-300" />
-                  ))}
-                </div>
-              </motion.div>
+              {/* </section> */}
+              <section className="Statistics">
+              <motion.h2
+        className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20"
+        variants={fadeIn}
+        initial="hidden"
+        animate="visible"
+      >
+        You may be wrongly denied overtime pay...<span className="text-blue-950 font-bold">and not even know it.</span>
+      </motion.h2>
+                <Statistics />
+              </section>
 
               <motion.div className="mb-16" variants={slideUp}>
+              <motion.h2
+        className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20"
+        variants={fadeIn}
+        initial="hidden"
+        animate="visible"
+      >
+        Commonly Misclassified Workers Include:      </motion.h2>
                 <motion.div 
-                  className="grid md:grid-cols-2 gap-8 mb-12"
-                  variants={fadeIn}
-                >
-                  <motion.div 
-                    className="bg-blue-800 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <div className="text-4xl font-bold text-blue-300 mb-2">
-                      <CountUp target={60} duration={1000} colorScheme="green" />%
-                    </div>
-                    <p className="text-lg text-blue-200">of people are eligible for overtime pay</p>
-                  </motion.div>
-                  <motion.div 
-                    className="bg-blue-800 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                  >
-                    <div className="text-4xl font-bold text-red-400 mb-2">
-                      <CountUp target={30} duration={1700} colorScheme="red" />%
-                    </div>
-                    <p className="text-lg text-blue-200">of employers <span className="font-bold">do not pay</span> what is owed</p>
-                  </motion.div>
-                </motion.div>
-              </motion.div>
-
-              <motion.div className="mb-16" variants={slideUp}>
-                <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
-                  Industries We Serve
-                </h2>
-                <motion.div 
-                  className="grid md:grid-cols-3 gap-8"
+                  className="grid md:grid-cols-4 gap-5"
                   variants={fadeIn}
                 >
                   {[
                     { title: "Healthcare Workers", icon: Stethoscope, description: "Nurses, medical assistants, and caregivers deserve fair compensation for their dedication." },
                     { title: "Construction Workers", icon: HardHat, description: "Builders, electricians, and plumbers should be paid for every hour they work, including overtime." },
                     { title: "IT Professionals", icon: Laptop, description: "Tech support, developers, and system administrators often work long hours that should be compensated." },
+                    { title: "And So Many More...", icon: Star, description: "Retail workers, executive assistant,customer service workers, stock clerks, and more should all be paid fairly for every hour they work" },
                   ].map((category, index) => (
                     <motion.div 
                       key={index} 
-                      className="bg-blue-800 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ type: "spring", stiffness: 300 }}
+                      className="bg-blue-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ type: "spring", stiffness: 100 }}
                     >
                       <category.icon className="h-16 w-16 text-blue-300 mx-auto mb-4" />
                       <h3 className="text-xl font-semibold text-white mb-2">{category.title}</h3>
@@ -132,9 +107,12 @@ export default function AnimatedLandingPageComponent() {
                   ))}
                 </motion.div>
               </motion.div>
+              <motion.div variants={zoomIn}>
+              <QuoteComponent />
+              </motion.div>
 
               <motion.div className="mb-16" variants={slideUp}>
-                <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-12">
+                <h2 className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20">
                   Why Choose SecureCounsel?
                   
                 </h2>
@@ -149,7 +127,7 @@ export default function AnimatedLandingPageComponent() {
                   ].map((feature, index) => (
                     <motion.div 
                       key={index} 
-                      className="bg-blue-800 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                      className="bg-blue-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
                       whileHover={{ scale: 1.05 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
@@ -174,7 +152,7 @@ export default function AnimatedLandingPageComponent() {
               animate="visible"
               exit="hidden"
               variants={fadeIn}
-              className="max-w-md mx-auto bg-blue-800 rounded-lg shadow-2xl p-8"
+              className="max-w-md mx-auto bg-blue-700 rounded-lg shadow-2xl p-8"
             >
               <h2 className="text-2xl font-bold text-white mb-6 text-center">Start Your Free Assessment</h2>
               <motion.div className="space-y-4" variants={slideUp}>
@@ -256,7 +234,7 @@ export default function AnimatedLandingPageComponent() {
         initial="hidden"
         animate="visible"
         variants={fadeIn}
-        className="bg-blue-950 text-white py-12"
+        className="bg-blue-800 text-white py-12"
       >
         <div className="container mx-auto px-4 text-center">
           <p>&copy; 2024 SecureCounsel. All rights reserved.</p>

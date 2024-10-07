@@ -6,13 +6,13 @@ import { useChat } from 'ai/react'
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 import { Progress } from "@/components/ui/progress"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { MessageSquare, Info, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MessageSquare, Info, ChevronLeft, ChevronRight, Scale, Bot } from 'lucide-react'
 
 interface FormData {
   name: string,
@@ -71,15 +71,10 @@ export function CaseAssessmentForm() {
 
   const handleNext = async () => {
     if (step === 4) {
-      // After collecting employer name and job title
       setProgress(80)
       setStep(step + 1)
 
-      // Prepare the prompt for the LLM
       const prompt = `Provide a brief summary about the employer "${formData.employerName}" in the context of wage and hour disputes or employment practices relevant to "${formData.jobTitle}".`
-      // Send the message to the LLM
-      // The handleChatSubmit function expects an event object, not a content object
-      // We create a synthetic event with preventDefault to satisfy the function's type
       await handleChatSubmit({ preventDefault: () => {}, message: prompt } as any)
     } else {
       const nextStep = step + 1
@@ -102,10 +97,12 @@ export function CaseAssessmentForm() {
           <span className="sr-only">Why is this important?</span>
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="bg-white">
         <SheetHeader>
-          <SheetTitle>Why is this important?</SheetTitle>
-          <SheetDescription>{content}</SheetDescription>
+          <SheetTitle className="text-lg font-semibold text-gray-900">Why is this important?</SheetTitle>
+          <SheetDescription className="mt-2 text-sm text-gray-700">
+            {content}
+          </SheetDescription>
         </SheetHeader>
       </SheetContent>
     </Sheet>
@@ -116,11 +113,14 @@ export function CaseAssessmentForm() {
       case 0:
         return (
           <div className="space-y-6">
+            <Label htmlFor="contact-info" className="text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Contact Information
+              <InfoButton content="Your contact information helps us personalize our communication with you and is necessary for any legal proceedings." />
+              </Label>
             <div className="space-y-2">
               <Label htmlFor="name" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Your Name
-                <InfoButton content="Your name helps us personalize our communication with you and is necessary for any legal proceedings." />
-              </Label>
+            </Label>
               <Input
                 id="name"
                 name="name"
@@ -133,7 +133,6 @@ export function CaseAssessmentForm() {
             <div className="space-y-2">
               <Label htmlFor="email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Your Email
-                <InfoButton content="We use your email to send important updates about your case and to communicate with you securely." />
               </Label>
               <Input
                 id="email"
@@ -148,7 +147,6 @@ export function CaseAssessmentForm() {
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Your Phone Number
-                <InfoButton content="A phone number allows us to reach you quickly if we need additional information or have important updates about your case." />
               </Label>
               <Input
                 id="phone"
@@ -350,7 +348,8 @@ export function CaseAssessmentForm() {
         return (
           <div className="space-y-4">
             <p className="text-lg font-medium">Thank you for providing all the necessary information.</p>
-            <p className="text-md">Based on your input, it appears you may have a valid claim for unpaid wages or overtime.</p>
+            <p className="text-md">Based on your input, 
+            it appears you may have a valid claim for unpaid wages or overtime.</p>
             <p className="text-sm text-gray-600">We recommend speaking with one of our legal experts to discuss your case in more detail. They will be able to provide personalized advice and guide you through the next steps.</p>
             <Button className="w-full">Schedule a Consultation</Button>
           </div>
@@ -361,75 +360,80 @@ export function CaseAssessmentForm() {
   }
 
   return (
-    <div className="flex flex-col items-center bg-gray-50">
+    <div className="flex flex-col items-center bg-gradient-to-b from-blue-50 to-white min-h-screen">
+      <header className="w-full bg-blue-600 text-white py-6 mb-8">
+        <div className="container mx-auto px-4">
+          <h1 className="text-3xl font-bold flex items-center justify-center">
+            <Scale className="mr-2 h-8 w-8" />
+            Instant AI-Powered Case Assessment
+          </h1>
+        </div>
+      </header>
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           <div className="mb-8">
-            <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-blue-600 rounded-full transition-all duration-500 ease-in-out"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
+            <Progress value={progress} className="w-full" />
             <p className="text-sm text-gray-600 mt-2 text-center">{progress.toFixed(0)}% Complete</p>
           </div>
           <Card className="backdrop-blur-sm bg-white/90 border-blue-200 shadow-xl mb-8">
             <CardHeader>
-              <CardTitle className="text-gray-900">Case Assessment</CardTitle>
+              <CardTitle className="text-2xl text-blue-800">Case Assessment</CardTitle>
             </CardHeader>
             <CardContent>
-              {/* Message box for streaming LLM output */}
-              {messages.length > 0 && (
-                <div className="p-4 bg-blue-50 text-blue-900 rounded-md border border-blue-200 shadow-inner mb-6">
-                  <h3 className="font-semibold mb-2 flex items-center">
-                    <MessageSquare className="mr-2 h-5 w-5" />
-                    Employer Information
-                  </h3>
-                  {messages.map((message) => (
-                    <p key={message.id} className="text-sm leading-relaxed">
-                      {message.content}
-                    </p>
-                  ))}
-                  {isLoading && (
-                    <div className="mt-2 flex items-center text-sm text-blue-600">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                      Fetching employer information...
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Existing form rendering */}
               {renderForm()}
-
-              <div className="flex justify-between mt-6">
-                <Button
-                  onClick={handlePrevious}
-                  disabled={step === 0 || isLoading}
-                  variant="outline"
-                  className="flex items-center"
-                >
-                  <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-                </Button>
-                <Button
-                  onClick={handleNext}
-                  disabled={step === 6 || isLoading}
-                  className="flex items-center"
-                >
-                  {isLoading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      Next <ChevronRight className="ml-2 h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </div>
             </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button
+                onClick={handlePrevious}
+                disabled={step === 0 || isLoading}
+                variant="outline"
+                className="flex items-center"
+              >
+                <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+              </Button>
+              <Button
+                onClick={handleNext}
+                disabled={step === 6 || isLoading}
+                className="flex items-center"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    Next <ChevronRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </CardFooter>
           </Card>
+          
+          {/* AI Response Message Box */}
+          {messages.length > 0 && (
+            <Card className="bg-blue-50 border-blue-200 shadow-lg mb-8">
+              <CardHeader>
+                <CardTitle className="text-xl text-blue-800 flex items-center">
+                  <Bot className="mr-2 h-6 w-6" />
+                  AI Insights
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {messages.map((message, index) => (
+                  <p key={index} className="text-sm leading-relaxed mb-2">
+                    {message.content}
+                  </p>
+                ))}
+                {isLoading && (
+                  <div className="flex items-center text-sm text-blue-600">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                    Analyzing your case...
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
       </main>
     </div>

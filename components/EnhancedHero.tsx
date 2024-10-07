@@ -39,12 +39,16 @@ export function EnhancedHero({ scrollToForm }: EnhancedHeroProps) {
   }, [scrollToForm])
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden bg-gradient-to-br from-blue-900 to-blue-700">
-      <div className="absolute inset-0 bg-blue-900 opacity-50"></div>
+    <section className="relative w-full min-h-screen overflow-hidden bg-gradient-to-br from-blue-900 to-blue-600">
+      <div className="absolute inset-0 bg-blue-600 opacity-50">
+
+      </div>
+
       <div className="relative z-10 container mx-auto px-4 py-20 flex flex-col lg:flex-row items-center justify-between min-h-screen">
+        
         <div className="w-full lg:w-1/2 pr-0 lg:pr-8 mb-12 lg:mb-0">
+
           <HeroContent onScrollToForm={handleScrollToForm} />
-          <TrustedCompanies />
         </div>
         <VideoBackground videoRef={videoRef} />
       </div>
@@ -74,21 +78,14 @@ function VideoBackground({ videoRef }: { videoRef: React.RefObject<HTMLVideoElem
 function HeroContent({ onScrollToForm }: { onScrollToForm: () => void }) {
   return (
     <div className="text-left max-w-xl mx-auto lg:mx-0">
-      <motion.h1
-        className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
+
+      <motion.h2
+        className="text-xl md:text-3xl lg:text-4xl font-semibold text-blue-200 mb-8"
         variants={fadeIn}
         initial="hidden"
         animate="visible"
       >
-        Empowering Workers, Ensuring Fair Compensation
-      </motion.h1>
-      <motion.h2
-        className="text-xl md:text-2xl lg:text-3xl font-semibold text-blue-200 mb-8"
-        variants={zoomIn}
-        initial="hidden"
-        animate="visible"
-      >
-        Your Rights Matter. Let&apos;s Secure What You Deserve.
+        You worked hard. Let&apos;s secure what you deserve.
       </motion.h2>
       <motion.p
         className="text-lg text-white mb-12"
@@ -97,8 +94,8 @@ function HeroContent({ onScrollToForm }: { onScrollToForm: () => void }) {
         animate="visible"
         transition={{ delay: 1 }}
       >
-        Our expert team has successfully recovered{' '}
-        <span className="font-bold text-yellow-400">over $100 million</span> in unpaid wages for workers like you.
+       The top 10 wage & hour cases in 2023 recovered{' '}
+        <span className="font-bold text-yellow-400">over $740 million</span> in unpaid wages for workers like you.
         It&apos;s time to stand up for your rights and secure your fair compensation.
       </motion.p>
       <motion.div
@@ -113,11 +110,10 @@ function HeroContent({ onScrollToForm }: { onScrollToForm: () => void }) {
           className="bg-yellow-500 hover:bg-yellow-600 text-blue-900 rounded-full text-lg px-8 py-6 font-semibold shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
           onClick={onScrollToForm}
         >
-          Get Your Free Case Review
+          Get Your Instant Case Review
           <ChevronRight className="ml-2 h-5 w-5" aria-hidden="true" />
         </Button>
       </motion.div>
-      <RatingStars />
     </div>
   )
 }

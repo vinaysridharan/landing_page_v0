@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
+  --background: #afd2ff;
+  --background2: #a1d3ff;
+  --background3: #f9f9fc;
   --foreground: #171717;
 }
 
@@ -14,10 +16,25 @@
   }
 }
 
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(-45deg, var(--background), var(--background2), var(--background3), var(--background));
+  background-size: 400% 400%;
+  animation: gradient 10s ease infinite;
+  font-family: sans-serif;
+  min-height: 100vh;
 }
 
 @layer utilities {
@@ -87,6 +104,6 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    /* Your body styles here */
   }
 }

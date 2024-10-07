@@ -29,7 +29,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-10">
           <Link href="/" className="flex items-center space-x-2">
             <Image
               src="/logo-icon.svg"
@@ -38,7 +38,7 @@ export function Header() {
               height={50}
               className="h-20 w-20"
             />
-            <span className="hidden font-bold sm:inline-block">
+            <span className="hidden font-bold font-mono sm:inline-block">
               SecureCounsel
             </span>
           </Link>

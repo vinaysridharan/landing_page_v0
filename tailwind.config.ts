@@ -55,7 +55,12 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+      // Add a new class called 'box' with a blue-700 background
+      // This extends Tailwind's utility classes with a custom class
+      backgroundColor: {
+        'box': 'var(--tw-color-blue-700)',
+      },
   	}
   },
   plugins: [require("tailwindcss-animate")],
