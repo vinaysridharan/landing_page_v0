@@ -6,10 +6,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ArrowRight, CheckCircle, DollarSign, Users, Briefcase, HardHat, Laptop, Stethoscope, Gavel, Star } from "lucide-react"
+import { ArrowRight, CheckCircle, DollarSign, Users, Brain, Briefcase, HardHat, Laptop, Stethoscope, Gavel, Star } from "lucide-react"
 import { CountUp } from './count-up'
 import Image from 'next/image'
-import { VideoHero } from './VideoHero'
 import { EnhancedHero } from './EnhancedHero'
 import { Header } from './Header'
 import { CaseAssessmentForm } from './case-assessment-form'
@@ -124,13 +123,15 @@ export default function AnimatedLandingPageComponent() {
                   
                 </h2>
                 <motion.div 
-                  className="grid md:grid-cols-3 gap-8"
+                  className="grid md:grid-cols-2 gap-8"
                   variants={fadeIn}
                 >
                   {[
-                    { title: "Expert Legal Team", icon: Briefcase, description: "Our attorneys specialize in employment law and have a proven track record of success." },
+                    { title: "Expert Legal Team", icon: Briefcase, description: "We selectively partner with employment law attorneys who have a proven track record of success." },
                     { title: "No Upfront Costs", icon: DollarSign, description: "We work on a contingency basis - you only pay if we win your case." },
                     { title: "Personalized Approach", icon: Users, description: "We treat each case with the individual attention it deserves." },
+                    { title: "Tech-Driven Approach", icon: Brain, description: "We get you answers faster by using AI to sift through your data & identify case viability." },
+
                   ].map((feature, index) => (
                     <motion.div 
                       key={index} 

@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-
+import Image from 'next/image'
 export default function HeroHeadline() {
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -59,6 +59,8 @@ export default function HeroHeadline() {
             </motion.span>
           ))}
         </motion.h1>
+        {/* <Image src="/We_Help_SVG.svg" alt="Hero Image" width={500} height={500} /> */}
+
         <motion.div
           className="mt-6 text-center"
           initial={{ opacity: 0, y: 20 }}
