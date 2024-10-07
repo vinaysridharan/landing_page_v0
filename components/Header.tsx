@@ -38,26 +38,26 @@ export function Header() {
               height={50}
               className="h-20 w-20"
             />
-            <span className="hidden font-bold font-mono sm:inline-block">
-              SecureCounsel
-            </span>
+            <div className="hidden font-bold font-mono sm:inline-block text-yellow-700">
+              <span className="text-black">Secure</span>Counsel
+            </div>
           </Link>
         </div>
         <nav className="hidden md:flex items-center gap-6">
-          <Link className="text-sm font-medium transition-colors hover:text-primary" href="#">
+          <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="/howitworks">
             How It Works
           </Link>
-          <Link className="text-sm font-medium transition-colors hover:text-primary" href="#">
+          <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="#">
             Success Stories
           </Link>
-          <Link className="text-sm font-medium transition-colors hover:text-primary" href="#">
+          <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="#">
             About Us
           </Link>
-          <Link className="text-sm font-medium transition-colors hover:text-primary" href="#">
+          <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="#">
             Contact
           </Link>
         </nav>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 mr-10">
           <Button className="hidden md:flex">Get Started</Button>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
