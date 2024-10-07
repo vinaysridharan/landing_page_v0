@@ -42,7 +42,6 @@ export default function AnimatedLandingPageComponent() {
 
   return (
     <div className="min-h-screen text-black">
-      <Header />
 
       <main className="container mx-auto px-4">
         <AnimatePresence mode="wait">
@@ -66,14 +65,22 @@ export default function AnimatedLandingPageComponent() {
               {/* </section> */}
               <section className="Statistics">
               <motion.h2
-        className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20"
+        className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center mt-20"
         variants={fadeIn}
         initial="hidden"
         animate="visible"
       >
         You may be wrongly denied overtime pay...<span className="text-blue-950 font-bold">and not even know it.</span>
       </motion.h2>
-                <Statistics />
+      <motion.p
+        className="text-xl text-gray-700 text-center my-5"
+        variants={fadeIn}
+        initial="hidden"
+        animate="visible"
+      >
+        Worker misclassification is alarmingly common, affecting millions of Americans each year. Many employees are unaware of their rights and the wages they're legally entitled to.
+      </motion.p>
+      <Statistics />
               </section>
 
               <motion.div className="mb-16" variants={slideUp}>
