@@ -72,7 +72,7 @@ export function CaseAssessmentForm() {
   const handleNext = async () => {
     if (step === 4) {
       // After collecting employer name and job title
-      setProgress(83)
+      setProgress(80)
       setStep(step + 1)
 
       // Prepare the prompt for the LLM

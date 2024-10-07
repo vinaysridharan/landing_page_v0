@@ -1,68 +1,91 @@
-import { useState } from 'react'
+"use client"
+
+import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button"
-import { Gavel, Menu } from 'lucide-react'
+import { Gavel, Menu, X } from 'lucide-react'
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 
+/**
+ * Header component for the SecureCounsel website.
+ * 
+ * This component renders the main navigation header, which includes:
+ * - The SecureCounsel logo and brand name
+ * - Navigation links (desktop view)
+ * - A mobile menu using a slide-out sheet
+ * - A call-to-action button
+ * 
+ * The component uses React hooks for state management and Next.js components
+ * for optimized image loading and client-side routing.
+ */
 export function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
   return (
-    <>
-      <header className="px-4 lg:px-6 h-16 flex items-center border-b border-gray-200 bg-white sticky top-0 z-50">
-        <div className="flex items-center flex-1">
-          <Image
-            src="/placeholder.svg?height=40&width=40"
-            alt="SecureCounsel Logo"
-            width={40}
-            height={40}
-            className="mr-2"
-          />
-          <Link className="flex items-center justify-center" href="#">
-            <Gavel className="h-6 w-6 text-blue-600" />
-            <span className="ml-2 text-lg font-bold text-gray-900">SecureCounsel</span>
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto flex h-16 items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center space-x-2">
+            <Image
+              src="/logo-icon.svg"
+              alt="SecureCounsel Logo"
+              width={50}
+              height={50}
+              className="h-20 w-20"
+            />
+            <span className="hidden font-bold sm:inline-block">
+              SecureCounsel
+            </span>
           </Link>
         </div>
-        <nav className="hidden md:flex gap-4 sm:gap-6">
-          <Link className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors" href="#">
+        <nav className="hidden md:flex items-center gap-6">
+          <Link className="text-sm font-medium transition-colors hover:text-primary" href="#">
             How It Works
           </Link>
-          <Link className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors" href="#">
+          <Link className="text-sm font-medium transition-colors hover:text-primary" href="#">
             Success Stories
           </Link>
-          <Link className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors" href="#">
+          <Link className="text-sm font-medium transition-colors hover:text-primary" href="#">
             About Us
           </Link>
-          <Link className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors" href="#">
+          <Link className="text-sm font-medium transition-colors hover:text-primary" href="#">
             Contact
           </Link>
         </nav>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          <Menu className="h-6 w-6" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
-      </header>
-      {mobileMenuOpen && (
-        <nav className="md:hidden bg-white border-b border-gray-200 p-4">
-          <Link className="block py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors" href="#">
-            How It Works
-          </Link>
-          <Link className="block py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors" href="#">
-            Success Stories
-          </Link>
-          <Link className="block py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors" href="#">
-            About Us
-          </Link>
-          <Link className="block py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors" href="#">
-            Contact
-          </Link>
-        </nav>
-      )}
-    </>
+        <div className="flex items-center gap-4">
+          <Button className="hidden md:flex">Get Started</Button>
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <nav className="flex flex-col gap-4">
+                <Link className="text-sm font-medium hover:underline" href="#" onClick={() => setOpen(false)}>
+                  How It Works
+                </Link>
+                <Link className="text-sm font-medium hover:underline" href="#" onClick={() => setOpen(false)}>
+                  Success Stories
+                </Link>
+                <Link className="text-sm font-medium hover:underline" href="#" onClick={() => setOpen(false)}>
+                  About Us
+                </Link>
+                <Link className="text-sm font-medium hover:underline" href="#" onClick={() => setOpen(false)}>
+                  Contact
+                </Link>
+                <Button className="mt-4 hover:scale-105">Get Started</Button>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </header>
   )
 }
