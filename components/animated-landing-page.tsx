@@ -40,9 +40,9 @@ export default function AnimatedLandingPageComponent() {
   }
 
   return (
-    <div className="min-h-screen text-black">
+    <div className="min-h-screen w-full text-black">
 
-      <main className="container mx-auto px-4">
+      <main className="w-full">
         <AnimatePresence mode="wait">
           {step === 1 && (
             <motion.div
@@ -52,45 +52,45 @@ export default function AnimatedLandingPageComponent() {
               exit="hidden"
               variants={fadeIn}
             >
-              <HeroHeadline />
-              <motion.div variants={slideUp} className="flex justify-center">
-                <Button size="lg" className="bg-blue-500 mb-10 hover:bg-blue-600 text-white rounded-full text-lg px-8 shadow-lg transform transition-transform duration-200 hover:scale-105" onClick={() => setStep(2)}>
-                  Get Started
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </motion.div>
+              <div className='h-[100vh] w-full flex justify-center items-center'>
+                <HeroHeadline />
+              </div>
               <EnhancedHero scrollToForm={() => setStep(2)} />
 
               {/* </section> */}
-              <section className="Statistics">
-              <motion.h2
-        className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center mt-20"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-      >
-        You may be wrongly denied overtime pay...<span className="text-blue-950 font-bold">and not even know it.</span>
-      </motion.h2>
-      <motion.p
-        className="text-xl text-gray-700 text-center my-5"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-      >
-        Worker misclassification is alarmingly common, affecting millions of Americans each year. Many employees are unaware of their rights and the wages they're legally entitled to.
-      </motion.p>
-      <Statistics />
+              <section className="Statistics flex justify-center items-center h-screen">
+                <div className='container flex flex-col gap-10'>
+                  <div className='flex flex-col gap-5'>
+                    <motion.h2
+                      className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center mt-20"
+                      variants={fadeIn}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      You may be wrongly denied overtime pay...<span className="text-blue-950 font-bold">and not even know it.</span>
+                    </motion.h2>
+                    <motion.p
+                      className="text-xl text-gray-700 text-center mx-auto w-1/2"
+                      variants={fadeIn}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      Worker misclassification is alarmingly common, affecting millions of Americans each year. Many employees are unaware of their rights and the wages they're legally entitled to.
+                    </motion.p>
+                  </div>
+                  <Statistics />
+                </div>
               </section>
 
               <motion.div className="mb-16" variants={slideUp}>
-              <motion.h2
-        className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-      >
-        Commonly Misclassified Workers Include:      </motion.h2>
-                <motion.div 
+                <motion.h2
+                  className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20"
+                  variants={fadeIn}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  Commonly Misclassified Workers Include:      </motion.h2>
+                <motion.div
                   className="grid md:grid-cols-4 gap-5"
                   variants={fadeIn}
                 >
@@ -100,8 +100,8 @@ export default function AnimatedLandingPageComponent() {
                     { title: "IT Professionals", icon: Laptop, description: "Tech support, developers, and system administrators often work long hours that should be compensated." },
                     { title: "And So Many More...", icon: Star, description: "Retail workers, executive assistant,customer service workers, stock clerks, and more should all be paid fairly for every hour they work" },
                   ].map((category, index) => (
-                    <motion.div 
-                      key={index} 
+                    <motion.div
+                      key={index}
                       className="bg-blue-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
                       whileHover={{ scale: 1.1 }}
                       transition={{ type: "spring", stiffness: 100 }}
@@ -114,15 +114,15 @@ export default function AnimatedLandingPageComponent() {
                 </motion.div>
               </motion.div>
               <motion.div variants={zoomIn}>
-              <QuoteComponent />
+                <QuoteComponent />
               </motion.div>
 
               <motion.div className="mb-16" variants={slideUp}>
                 <h2 className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20">
                   Why Choose SecureCounsel?
-                  
+
                 </h2>
-                <motion.div 
+                <motion.div
                   className="grid md:grid-cols-2 gap-8"
                   variants={fadeIn}
                 >
@@ -133,8 +133,8 @@ export default function AnimatedLandingPageComponent() {
                     { title: "Tech-Driven Approach", icon: Brain, description: "We get you answers faster by using AI to sift through your data & identify case viability." },
 
                   ].map((feature, index) => (
-                    <motion.div 
-                      key={index} 
+                    <motion.div
+                      key={index}
                       className="bg-blue-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
                       whileHover={{ scale: 1.05 }}
                       transition={{ type: "spring", stiffness: 300 }}
@@ -214,13 +214,13 @@ export default function AnimatedLandingPageComponent() {
               >
                 <CheckCircle className="h-20 w-20 text-green-400 mx-auto mb-6" />
               </motion.div>
-              <motion.h2 
+              <motion.h2
                 className="text-3xl font-bold text-white mb-4"
                 variants={slideUp}
               >
                 Thank You for Reaching Out!
               </motion.h2>
-              <motion.p 
+              <motion.p
                 className="text-blue-200 mb-8 text-lg"
                 variants={slideUp}
               >
@@ -238,7 +238,7 @@ export default function AnimatedLandingPageComponent() {
 
       <CaseAssessmentForm />
 
-      <motion.footer 
+      <motion.footer
         initial="hidden"
         animate="visible"
         variants={fadeIn}

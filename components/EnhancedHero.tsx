@@ -39,17 +39,10 @@ export function EnhancedHero({ scrollToForm }: EnhancedHeroProps) {
   }, [scrollToForm])
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden bg-gradient-to-br from-blue-900 to-blue-600">
-      <div className="absolute inset-0 bg-blue-600 opacity-50">
+    <section className="relative w-full bg-gradient-to-br from-blue-900 to-blue-600 flex justify-center items-center">
 
-      </div>
-
-      <div className="relative z-10 container mx-auto px-4 py-20 flex flex-col lg:flex-row items-center justify-between min-h-screen">
-        
-        <div className="w-full lg:w-1/2 pr-0 lg:pr-8 mb-12 lg:mb-0">
-
-          <HeroContent onScrollToForm={handleScrollToForm} />
-        </div>
+      <div className="container flex items-center px-16">
+        <HeroContent onScrollToForm={handleScrollToForm} />
         <VideoBackground videoRef={videoRef} />
       </div>
     </section>
@@ -58,26 +51,28 @@ export function EnhancedHero({ scrollToForm }: EnhancedHeroProps) {
 
 function VideoBackground({ videoRef }: { videoRef: React.RefObject<HTMLVideoElement> }) {
   return (
-    <div className="w-full lg:w-1/2 h-full lg:h-screen relative overflow-hidden rounded-lg shadow-2xl">
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-[150%] object-cover object-center"
-      >
-        <source src="/worker_video_2.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-      <div className="absolute inset-0 bg-blue-900 bg-opacity-30"></div>
+    <div className='w-1/2 flex justify-end'>
+      <div className="w-1/2 h-[500px] relative overflow-hidden rounded-lg shadow-2xl my-10">
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-[150%] object-cover object-center"
+        >
+          <source src="/worker_video_2.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <div className="absolute inset-0 bg-blue-900 bg-opacity-30"></div>
+      </div>
     </div>
   )
 }
 
 function HeroContent({ onScrollToForm }: { onScrollToForm: () => void }) {
   return (
-    <div className="text-left max-w-xl mx-auto lg:mx-0">
+    <div className="text-left mx-auto lg:mx-0 w-1/2">
 
       <motion.h2
         className="text-xl md:text-3xl lg:text-4xl font-semibold text-blue-200 mb-8"
@@ -94,7 +89,7 @@ function HeroContent({ onScrollToForm }: { onScrollToForm: () => void }) {
         animate="visible"
         transition={{ delay: 1 }}
       >
-       The top 10 wage & hour cases in 2023 recovered{' '}
+        The top 10 wage & hour cases in 2023 recovered{' '}
         <span className="font-bold text-yellow-400">over $740 million</span> in unpaid wages for workers like you.
         It&apos;s time to stand up for your rights and secure your fair compensation.
       </motion.p>

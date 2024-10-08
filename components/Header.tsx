@@ -28,7 +28,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between">
+      <div className="container mx-auto flex h-20 items-center justify-between">
         <div className="flex items-center gap-10">
           <Link href="/" className="flex items-center space-x-2">
             <Image
@@ -43,17 +43,17 @@ export function Header() {
             </div>
           </Link>
         </div>
-        <nav className="hidden md:flex items-center gap-6">
-          <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="/howitworks">
+        <nav className="hidden md:flex items-center gap-6 text-black font-medium text-base">
+          <Link className="transition-colors hover:text-blue-700" href="/howitworks">
             How It Works
           </Link>
-          <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="#">
+          <Link className="transition-colors hover:text-blue-700" href="#">
             Success Stories
           </Link>
-          <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="#">
+          <Link className="transition-colors hover:text-blue-700" href="#">
             About Us
           </Link>
-          <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="#">
+          <Link className="transition-colors hover:text-blue-700" href="#">
             Contact
           </Link>
         </nav>
