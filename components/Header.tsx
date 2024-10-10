@@ -28,6 +28,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className='h-10 flex justify-center items-center bg-red-500 text-white'>Don't wait! Statute of limitations may apply. Get your free case review now before it's too late.</div>
       <div className="container mx-auto flex h-20 items-center justify-between">
         <div className="flex items-center gap-10">
           <Link href="/" className="flex items-center space-x-2">

@@ -37,9 +37,9 @@ export default function HeroHeadline() {
   const words = ['Empowering', 'Workers,', 'Ensuring', 'Fair', 'Compensation']
 
   return (
-    <div className="flex flex-col justify-center items-center gap-10">
+    <div className="flex flex-col justify-center items-start gap-10">
       <motion.h1
-        className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-center tracking-tight"
+        className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-start tracking-tight"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -47,7 +47,7 @@ export default function HeroHeadline() {
         {words.map((word, index) => (
           <motion.span
             key={index}
-            className="inline-block mr-2 md:mr-3"
+            className="inline-block mr-5 mb-3"
             variants={wordVariants}
           >
             {index === 0 || index === 3 ? (
@@ -61,7 +61,7 @@ export default function HeroHeadline() {
       {/* <Image src="/We_Help_SVG.svg" alt="Hero Image" width={500} height={500} /> */}
 
       <motion.div
-        className="mt-6 text-center"
+        className="text-start"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8, duration: 0.6 }}

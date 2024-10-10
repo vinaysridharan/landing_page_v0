@@ -3,6 +3,10 @@
 import React, { useState, useEffect } from 'react'
 import { motion, useAnimation, Variant } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
+import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import ProgressProvider from './ProgressProvider';
+
 
 interface CountUpProps {
   target: number
@@ -50,7 +54,7 @@ export function CountUp({ target, duration = 2000, decimals = 0, title, colorSch
         if (!startTime) startTime = timestamp
         const progress = timestamp - startTime
         const percentage = Math.min(progress / duration, 1)
-        
+
         setCount(percentage * target)
 
         if (percentage < 1) {
@@ -74,44 +78,62 @@ export function CountUp({ target, duration = 2000, decimals = 0, title, colorSch
   const { text: textColor, circle: circleColor } = colorSchemes[colorScheme]
 
   return (
-    <div ref={ref} className="flex flex-col items-center justify-center">
-      {title && <h3 className="text-2xl font-semibold mb-4 text-gray-800">{title}</h3>}
-      <div className="relative w-48 h-48">
-        <svg className="w-full h-full">
-          <circle
-            className="text-gray-200"
-            strokeWidth="8"
-            stroke="currentColor"
-            fill="transparent"
-            r="88"
-            cx="96"
-            cy="96"
-          />
-          <circle
-            className={circleColor}
-            strokeWidth="8"
-            stroke="currentColor"
-            fill="transparent"
-            r="88"
-            cx="96"
-            cy="96"
-            strokeLinecap="round"
-            strokeDasharray="552.9"
-            strokeDashoffset={552.9 * (1 - count / target)}
-          />
-        </svg>
-        <motion.div 
-          className="absolute inset-0 flex items-center justify-center"
-          initial="hidden"
-          animate={controls}
-          variants={countVariants}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-        >
-          <span className={`text-6xl font-bold bg-gradient-to-br ${textColor} text-transparent bg-clip-text`}>
-            {count.toFixed(decimals)}%
-          </span>
-        </motion.div>
-      </div>
+    <div className='w-44'>
+      <ProgressProvider valueStart={0} valueEnd={target}>
+        {value =>
+          <CircularProgressbar
+            value={target}
+            text={`${target}%`}
+            styles={buildStyles({
+              textSize: '16px',
+              pathTransitionDuration: 0.5,
+              pathColor: `${colorScheme}`,
+              textColor: `white`,
+              trailColor: '#d6d6d6',
+              backgroundColor: '#3e98c7',
+            })}
+          />}
+      </ProgressProvider>
+
     </div>
+    // <div ref={ref} className="flex flex-col items-center justify-center">
+    //   {title && <h3 className="text-2xl font-semibold mb-4 text-gray-800">{title}</h3>}
+    //   <div className="relative w-48 h-48">
+    //     <svg className="w-full h-full">
+    //       <circle
+    //         className="text-gray-200"
+    //         strokeWidth="8"
+    //         stroke="currentColor"
+    //         fill="transparent"
+    //         r="88"
+    //         cx="96"
+    //         cy="96"
+    //       />
+    //       <circle
+    //         className={circleColor}
+    //         strokeWidth="8"
+    //         stroke="currentColor"
+    //         fill="transparent"
+    //         r="88"
+    //         cx="96"
+    //         cy="96"
+    //         strokeLinecap="round"
+    //         strokeDasharray="552.9"
+    //         strokeDashoffset={552.9 * (1 - count / target)}
+    //       />
+    //     </svg>
+    //     <motion.div 
+    //       className="absolute inset-0 flex items-center justify-center"
+    //       initial="hidden"
+    //       animate={controls}
+    //       variants={countVariants}
+    //       transition={{ duration: 0.5, ease: "easeInOut" }}
+    //     >
+    //       <span className={`text-6xl font-bold bg-gradient-to-br ${textColor} text-transparent bg-clip-text`}>
+    //         {count.toFixed(decimals)}%
+    //       </span>
+    //     </motion.div>
+    //   </div>
+    // </div>
   )
 }
