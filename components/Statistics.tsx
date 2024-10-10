@@ -8,7 +8,7 @@ const fadeIn = {
 function StatisticCard(props: { color: "blue" | "green" | "red", content: string, stats:number}) {
   return (
     <motion.div 
-      className="bg-blue-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+      className="bg-indigo-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
       whileHover={{ scale: 1.05 }}
       transition={{ type: "spring", stiffness: 300 }}
     >

@@ -97,7 +97,7 @@ export function CountUp({ target, duration = 2000, decimals = 0, title, colorSch
             cy="96"
             strokeLinecap="round"
             strokeDasharray="552.9"
-            strokeDashoffset={552.9 * (1 - count / target)}
+            strokeDashoffset={552.9 * (1 - count / 100)}
           />
         </svg>
         <motion.div 

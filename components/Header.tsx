@@ -43,17 +43,17 @@ export function Header() {
             </div>
           </Link>
         </div>
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center text-blue-700 gap-6">
           <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="/howitworks">
             How It Works
           </Link>
-          <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="#">
+          <Link className="text-sm font-medium text-blacktransition-colors hover:text-blue-700" href="#">
             Success Stories
           </Link>
-          <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="#">
+          <Link className="text-sm font-medium text-black transition-colors hover:text-blue-700" href="#">
             About Us
           </Link>
-          <Link className="text-sm font-medium transition-colors hover:text-blue-700" href="#">
+          <Link className="text-sm font-medium text-black transition-colors hover:text-blue-700" href="#">
             Contact
           </Link>
         </nav>

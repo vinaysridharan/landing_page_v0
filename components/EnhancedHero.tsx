@@ -39,8 +39,8 @@ export function EnhancedHero({ scrollToForm }: EnhancedHeroProps) {
   }, [scrollToForm])
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden bg-gradient-to-br from-blue-900 to-blue-600">
-      <div className="absolute inset-0 bg-blue-600 opacity-50">
+    <section className="relative w-full min-h-screen overflow-hidden bg-gradient-to-br from-indigo-900 to-indigo-500">
+      <div className="absolute inset-0 bg-indigo-600 opacity-50">
 
       </div>
 

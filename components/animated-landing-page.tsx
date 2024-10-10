@@ -63,34 +63,37 @@ export default function AnimatedLandingPageComponent() {
 
               {/* </section> */}
               <section className="Statistics">
-              <motion.h2
-        className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center mt-20"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-      >
-        You may be wrongly denied overtime pay...<span className="text-blue-950 font-bold">and not even know it.</span>
-      </motion.h2>
-      <motion.p
-        className="text-xl text-gray-700 text-center my-5"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-      >
-        Worker misclassification is alarmingly common, affecting millions of Americans each year. Many employees are unaware of their rights and the wages they're legally entitled to.
-      </motion.p>
-      <Statistics />
+                <motion.h2
+                  className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center mt-20"
+                  variants={fadeIn}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  You may be wrongly denied overtime pay...<span className="text-blue-950 font-bold">and not even know it.</span>
+                </motion.h2>
+                <div className="flex justify-center">
+                  <motion.p
+
+                    className="text-xl text-gray-700 text-center my-5"
+                    variants={fadeIn}
+                    initial="hidden"
+                    animate="visible"
+                  >
+                    Worker misclassification is alarmingly common, affecting millions of Americans each year. Many employees are unaware of their rights and the wages they're legally entitled to.
+                  </motion.p>
+                </div>
+                <Statistics />
               </section>
 
               <motion.div className="mb-16" variants={slideUp}>
-              <motion.h2
-        className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-      >
-        Commonly Misclassified Workers Include:      </motion.h2>
-                <motion.div 
+                <motion.h2
+                  className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20"
+                  variants={fadeIn}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  Commonly Misclassified Workers Include:      </motion.h2>
+                <motion.div
                   className="grid md:grid-cols-4 gap-5"
                   variants={fadeIn}
                 >
@@ -100,9 +103,9 @@ export default function AnimatedLandingPageComponent() {
                     { title: "IT Professionals", icon: Laptop, description: "Tech support, developers, and system administrators often work long hours that should be compensated." },
                     { title: "And So Many More...", icon: Star, description: "Retail workers, executive assistant,customer service workers, stock clerks, and more should all be paid fairly for every hour they work" },
                   ].map((category, index) => (
-                    <motion.div 
-                      key={index} 
-                      className="bg-blue-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                    <motion.div
+                      key={index}
+                      className="bg-indigo-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
                       whileHover={{ scale: 1.1 }}
                       transition={{ type: "spring", stiffness: 100 }}
                     >
@@ -114,15 +117,15 @@ export default function AnimatedLandingPageComponent() {
                 </motion.div>
               </motion.div>
               <motion.div variants={zoomIn}>
-              <QuoteComponent />
+                <QuoteComponent />
               </motion.div>
 
               <motion.div className="mb-16" variants={slideUp}>
                 <h2 className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20">
                   Why Choose SecureCounsel?
-                  
+
                 </h2>
-                <motion.div 
+                <motion.div
                   className="grid md:grid-cols-2 gap-8"
                   variants={fadeIn}
                 >
@@ -133,9 +136,9 @@ export default function AnimatedLandingPageComponent() {
                     { title: "Tech-Driven Approach", icon: Brain, description: "We get you answers faster by using AI to sift through your data & identify case viability." },
 
                   ].map((feature, index) => (
-                    <motion.div 
-                      key={index} 
-                      className="bg-blue-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                    <motion.div
+                      key={index}
+                      className="bg-indigo-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
                       whileHover={{ scale: 1.05 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
@@ -160,30 +163,30 @@ export default function AnimatedLandingPageComponent() {
               animate="visible"
               exit="hidden"
               variants={fadeIn}
-              className="max-w-md mx-auto bg-blue-700 rounded-lg shadow-2xl p-8"
+              className="max-w-md mx-auto bg-indigo-700 rounded-lg shadow-2xl p-8"
             >
               <h2 className="text-2xl font-bold text-white mb-6 text-center">Start Your Free Assessment</h2>
               <motion.div className="space-y-4" variants={slideUp}>
                 <div>
                   <Label htmlFor="name" className="text-blue-200">Full Name</Label>
-                  <Input id="name" placeholder="John Doe" className="mt-1 bg-blue-700 text-white placeholder-blue-300" />
+                  <Input id="name" placeholder="John Doe" className="mt-1 bg-indigo-700 text-white placeholder-blue-300" />
                 </div>
                 <div>
                   <Label htmlFor="email" className="text-blue-200">Email Address</Label>
-                  <Input id="email" type="email" placeholder="john@example.com" className="mt-1 bg-blue-700 text-white placeholder-blue-300" />
+                  <Input id="email" type="email" placeholder="john@example.com" className="mt-1 bg-indigo-700 text-white placeholder-blue-300" />
                 </div>
                 <div>
                   <Label className="text-blue-200">Select Your Industry</Label>
                   <RadioGroup value={industry} onValueChange={setIndustry} className="mt-2">
                     {['healthcare', 'construction', 'it', 'other'].map((ind) => (
-                      <div key={ind} className="flex items-center space-x-2 p-2 rounded-md hover:bg-blue-700 transition-colors">
+                      <div key={ind} className="flex items-center space-x-2 p-2 rounded-md hover:bg-indigo-700 transition-colors">
                         <RadioGroupItem value={ind} id={ind} />
                         <Label htmlFor={ind} className="capitalize text-blue-200">{ind}</Label>
                       </div>
                     ))}
                   </RadioGroup>
                 </div>
-                <div className="text-sm text-blue-200 mt-4 bg-blue-700 p-4 rounded-md">
+                <div className="text-sm text-blue-200 mt-4 bg-indigo-700 p-4 rounded-md">
                   <p>Your information is 100% confidential and protected.</p>
                   <div className="flex items-center mt-2">
                     <Image src="/security-badge.svg" alt="Security" width={20} height={20} />
@@ -214,13 +217,13 @@ export default function AnimatedLandingPageComponent() {
               >
                 <CheckCircle className="h-20 w-20 text-green-400 mx-auto mb-6" />
               </motion.div>
-              <motion.h2 
+              <motion.h2
                 className="text-3xl font-bold text-white mb-4"
                 variants={slideUp}
               >
                 Thank You for Reaching Out!
               </motion.h2>
-              <motion.p 
+              <motion.p
                 className="text-blue-200 mb-8 text-lg"
                 variants={slideUp}
               >
@@ -238,7 +241,7 @@ export default function AnimatedLandingPageComponent() {
 
       <CaseAssessmentForm />
 
-      <motion.footer 
+      <motion.footer
         initial="hidden"
         animate="visible"
         variants={fadeIn}
