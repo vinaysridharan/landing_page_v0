@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useChat } from 'ai/react'
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -12,7 +13,7 @@ import { Progress } from "@/components/ui/progress"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { MessageSquare, Info, ChevronLeft, ChevronRight, Scale, Bot } from 'lucide-react'
+import { MessageSquare, Info, ChevronLeft, ChevronRight, Scale, Bot, ShieldCheck } from 'lucide-react' // Importing ShieldCheck icon for security or compliance
 
 interface FormData {
   name: string,
@@ -52,9 +53,7 @@ export function CaseAssessmentForm() {
   })
   const [employerConfirmed, setEmployerConfirmed] = useState(false)
 
-  const { messages, handleInputChange: handleChatInputChange, handleSubmit: handleChatSubmit, isLoading } = useChat({
-    api: '/api/chat',
-  })
+  const { isLoading, messages, input, handleInputChange, handleSubmit } = useChat();
 
   const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -75,7 +74,7 @@ export function CaseAssessmentForm() {
       setStep(step + 1)
 
       const prompt = `Provide a brief summary about the employer "${formData.employerName}" in the context of wage and hour disputes or employment practices relevant to "${formData.jobTitle}".`
-      await handleChatSubmit({ preventDefault: () => {}, message: prompt } as any)
+      await handleSubmit({ preventDefault: () => { }, message: prompt } as any)
     } else {
       const nextStep = step + 1
       setStep(nextStep)
@@ -116,11 +115,11 @@ export function CaseAssessmentForm() {
             <Label htmlFor="contact-info" className="text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               Contact Information
               <InfoButton content="Your contact information helps us personalize our communication with you and is necessary for any legal proceedings." />
-              </Label>
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Your Name
             </Label>
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                Your Name
+              </Label>
               <Input
                 id="name"
                 name="name"
@@ -128,10 +127,11 @@ export function CaseAssessmentForm() {
                 value={formData.name}
                 onChange={handleFormInputChange}
                 required
+                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <Label htmlFor="email" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Your Email
               </Label>
               <Input
@@ -142,10 +142,11 @@ export function CaseAssessmentForm() {
                 value={formData.email}
                 onChange={handleFormInputChange}
                 required
+                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <Label htmlFor="phone" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Your Phone Number
               </Label>
               <Input
@@ -156,7 +157,29 @@ export function CaseAssessmentForm() {
                 value={formData.phone}
                 onChange={handleFormInputChange}
                 required
+                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
               />
+            </div>
+            {/* ShieldCheck icon to indicate data protection */}
+            {/* Info icon for Data Treatment and Encryption */}
+            <div className="flex items-center space-x-2">
+              <ShieldCheck className="h-8 w-8 text-slate-500" /> 
+              <Label htmlFor="data-protection-info" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                We take your privacy and data security very seriously
+              </Label>
+              <InfoButton content={
+                <>
+                  <p className="text-sm text-gray-600">
+                    <strong>Data Protection:</strong>All the information you provide is encrypted both in transit and at rest using industry-standard encryption protocols. This ensures that your personal data, including your name, email, and phone number, is protected from unauthorized access.
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <strong>Encryption Details:</strong> We use TLS (Transport Layer Security) to encrypt data transmitted between your browser and our servers. Additionally, your data is stored in an encrypted format using AES-256 (Advanced Encryption Standard) on our servers. This dual-layer encryption approach helps safeguard your information throughout the entire process.
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <strong>Data Usage:</strong> The contact information you provide is used solely for the purpose of personalizing our communication with you and for any necessary legal proceedings. We do not share your personal information with third parties without your explicit consent.
+                  </p>
+                </>
+              } />
             </div>
           </div>
         )
@@ -164,22 +187,22 @@ export function CaseAssessmentForm() {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-sm font-medium leading-none">
+              <Label className="text-base font-medium leading-none">
                 Were you paid overtime for each hour over 40 - that is, at least 1.5x times your hourly wage?
                 <InfoButton content="Overtime pay is a crucial aspect of labor law. Most non-exempt employees are entitled to 1.5 times their regular hourly rate for hours worked beyond 40 in a workweek." />
               </Label>
               <RadioGroup value={formData.overtimePaid} onValueChange={(value) => handleRadioChange('overtimePaid', value)} className="flex flex-col space-y-1">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="yes" id="yes" />
-                  <Label htmlFor="yes">Yes</Label>
+                  <Label className='text-base' htmlFor="yes">Yes</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="no" id="no" />
-                  <Label htmlFor="no">No</Label>
+                  <Label className='text-base' htmlFor="no">No</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="other" id="other" />
-                  <Label htmlFor="other">Other</Label>
+                  <Label className='text-base' htmlFor="other">Other</Label>
                 </div>
               </RadioGroup>
             </div>
@@ -189,8 +212,8 @@ export function CaseAssessmentForm() {
                 placeholder="Please provide details about your overtime pay situation..."
                 value={formData.otherOvertimeDetails}
                 onChange={handleFormInputChange}
-                className="min-h-[100px]"
                 required
+                className='text-base min-h-[100px] border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
               />
             )}
           </div>
@@ -208,9 +231,9 @@ export function CaseAssessmentForm() {
                 name="weeklyWage"
                 min={0}
                 max={3000}
-                step={50}
+                step={10} // Reduced step value to make the slider easier to move
                 value={[formData.weeklyWage]}
-                onValueChange={(value) => handleSliderChange(value)}
+                onValueChange={handleSliderChange}
                 className="w-full"
               />
             </div>
@@ -228,7 +251,7 @@ export function CaseAssessmentForm() {
         return (
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="employer-name" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <Label htmlFor="employer-name" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Employer Name
                 <InfoButton content="Knowing your employer helps us research their history of labor practices and any previous wage disputes." />
               </Label>
@@ -239,10 +262,11 @@ export function CaseAssessmentForm() {
                 value={formData.employerName}
                 onChange={handleFormInputChange}
                 required
+                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="job-title" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <Label htmlFor="job-title" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 Job Title
                 <InfoButton content="Your job title can help determine if you were correctly classified as exempt or non-exempt from overtime pay." />
               </Label>
@@ -253,6 +277,7 @@ export function CaseAssessmentForm() {
                 value={formData.jobTitle}
                 onChange={handleFormInputChange}
                 required
+                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
               />
             </div>
           </div>
@@ -348,10 +373,11 @@ export function CaseAssessmentForm() {
         return (
           <div className="space-y-4">
             <p className="text-lg font-medium">Thank you for providing all the necessary information.</p>
-            <p className="text-md">Based on your input, 
-            it appears you may have a valid claim for unpaid wages or overtime.</p>
-            <p className="text-sm text-gray-600">We recommend speaking with one of our legal experts to discuss your case in more detail. They will be able to provide personalized advice and guide you through the next steps.</p>
-            <Button className="w-full">Schedule a Consultation</Button>
+            <p className="text-md">Based on your input, we'll need to do a review of the AI responses. Thank you for your patience as we continue alpha testing!</p>
+            <p className="text-sm text-gray-600">We recommend speaking with one of us to discuss your case in more detail. We can then provide personalized advice and guide you through the next steps.</p>
+            <Button className="w-full" onClick={() => {
+              window.location.href = 'https://calendly.com/vsridharan-parabellumcap/30min';
+            }}>Schedule a Consultation</Button>
           </div>
         )
       default:
@@ -360,28 +386,39 @@ export function CaseAssessmentForm() {
   }
 
   return (
-    <div className="flex flex-col items-center bg-gradient-to-b from-blue-50 to-white min-h-screen">
-      <header className="w-full bg-blue-600 text-white py-6 mb-8">
+    <div className="mx-10 flex flex-col items-center bg-gradient-to-b from-blue-200 to-transparent to-transparent rounded-[40px]">
+      {/* <header className="w-full bg-blue-600 text-white py-6 mb-8">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold flex items-center justify-center">
             <Scale className="mr-2 h-8 w-8" />
             Instant AI-Powered Case Assessment
           </h1>
         </div>
-      </header>
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="mb-8">
+      </header> */}
+      <main className="flex-grow container mx-auto px-8 py-8">
+        <div className="mx-auto">
+          {/* <div className="mb-8">
             <Progress value={progress} className="w-full" />
             <p className="text-sm text-gray-600 mt-2 text-center">{progress.toFixed(0)}% Complete</p>
-          </div>
-          <Card className="backdrop-blur-sm bg-white/90 border-blue-200 shadow-xl mb-8">
-            <CardHeader>
-              <CardTitle className="text-2xl text-blue-800">Case Assessment</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {renderForm()}
-            </CardContent>
+          </div> */}
+          <Card className="flex flex-col justify-between rounded-[30px] backdrop-blur-sm bg-white/90 border-blue-200 shadow-xl h-[600px]">
+            <div>
+              <CardHeader>
+                <Bot className="h-8 w-8 text-slate-500" />
+                <CardTitle className="text-2xl text-blue-800"><span className="text-slate-500">AI-Powered</span> Instant Case Assessment</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <motion.div
+                  key={step}
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.3 }}
+              >
+                  {renderForm()}
+                </motion.div>
+              </CardContent>
+            </div>
             <CardFooter className="flex justify-between">
               <Button
                 onClick={handlePrevious}
@@ -409,7 +446,7 @@ export function CaseAssessmentForm() {
               </Button>
             </CardFooter>
           </Card>
-          
+
           {/* AI Response Message Box */}
           {messages.length > 0 && (
             <Card className="bg-blue-50 border-blue-200 shadow-lg mb-8">

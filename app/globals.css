@@ -1,3 +1,19 @@
+/* 
+ * Tailwind CSS Base Styles
+ * 
+ * This directive injects Tailwind's base styles and any base styles registered 
+ * by plugins. It provides a standardized starting point for styling, resetting 
+ * browser defaults, and ensuring consistent rendering across different browsers.
+ * 
+ * The base styles include:
+ * - Normalized CSS reset
+ * - Basic typography styles
+ * - Default margins and paddings
+ * - And other foundational styles
+ * 
+ * By including this directive, we ensure that all Tailwind utility classes 
+ * will work as expected on top of a consistent base.
+ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,7 +23,9 @@
   --background2: #a1d3ff;
   --background3: #f9f9fc;
   --foreground: #171717;
+  --site-card-bg: theme('colors.indigo.700');
 }
+
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -32,7 +50,7 @@ body {
   color: var(--foreground);
   background: linear-gradient(-45deg, var(--background), var(--background2), var(--background3), var(--background));
   background-size: 400% 400%;
-  animation: gradient 10s ease infinite;
+  animation: gradient 15s ease infinite;
   font-family: sans-serif;
   min-height: 100vh;
 }
@@ -40,6 +58,9 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  .site-card-bg {
+    background-color: var(--site-card-bg);
   }
 }
 

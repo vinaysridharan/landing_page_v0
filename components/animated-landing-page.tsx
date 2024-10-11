@@ -7,14 +7,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { ArrowRight, CheckCircle, DollarSign, Users, Brain, Briefcase, HardHat, Laptop, Stethoscope, Gavel, Star } from "lucide-react"
-import { CountUp } from './count-up'
 import Image from 'next/image'
-import { EnhancedHero } from './EnhancedHero'
-import { Header } from './Header'
-import { CaseAssessmentForm } from './case-assessment-form'
-import { Statistics } from './Statistics'
-import HeroHeadline from './hero-headline'
-import { QuoteComponent } from './quote-component'
+import { Hero2 } from './sections/Hero2'
+import { CaseAssessmentForm } from './sections/case-assessment-form'
+import { Statistics } from './sections/Statistics'
+import HeroHeadline from './sections/hero-headline'
+import { QuoteComponent } from './sections/quote-component'
+import { Footer } from './sections/Footer' // Import the Footer component
+import UserIntakeForm from './sections/user-intake-form'
 
 export default function AnimatedLandingPageComponent() {
   const [step, setStep] = useState(1)
@@ -40,9 +40,9 @@ export default function AnimatedLandingPageComponent() {
   }
 
   return (
-    <div className="min-h-screen text-black">
+    <div className="min-h-screen w-full text-black">
 
-      <main className="container mx-auto px-4">
+      <main className="w-full">
         <AnimatePresence mode="wait">
           {step === 1 && (
             <motion.div
@@ -52,107 +52,128 @@ export default function AnimatedLandingPageComponent() {
               exit="hidden"
               variants={fadeIn}
             >
-              <HeroHeadline />
-              <motion.div variants={slideUp} className="flex justify-center">
-                <Button size="lg" className="bg-blue-500 mb-10 hover:bg-blue-600 text-white rounded-full text-lg px-8 shadow-lg transform transition-transform duration-200 hover:scale-105" onClick={() => setStep(2)}>
-                  Get Started
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </motion.div>
-              <EnhancedHero scrollToForm={() => setStep(2)} />
+              <div className='relative min-h-screen w-full flex justify-center mt-10 px-4'>
+                <div className='container flex flex-col lg:flex-row justify-between items-center gap-10'>
+                  <div className='w-full lg:w-1/2 mb-10 lg:mb-0'>
+                    <HeroHeadline />
+ 
+                  </div>
+                  <div className='w-full lg:w-1/2 mb-10 lg:mb-0'>
+                    <CaseAssessmentForm />
+                  </div>
+                </div>
+              </div>
+              {/* <UserIntakeForm /> */}
+              <Hero2 scrollToForm={() => setStep(2)} />
 
               {/* </section> */}
-              <section className="Statistics">
-                <motion.h2
-                  className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center mt-20"
-                  variants={fadeIn}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  You may be wrongly denied overtime pay...<span className="text-blue-950 font-bold">and not even know it.</span>
-                </motion.h2>
-                <div className="flex justify-center">
-                  <motion.p
+              <section className="Statistics flex justify-center items-center my-10">
+                <div className='container flex flex-col gap-10'>
+                  <div className='flex flex-col gap-5'>
+                    <motion.h2
+                      className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center mt-20"
+                      variants={fadeIn}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      You may be wrongly denied overtime pay...<span className="text-blue-950 font-bold">and not even know it.</span>
+                    </motion.h2>
+                    <motion.p
+                      className="text-xl text-slate text-center mx-auto w-1/2"
+                      variants={fadeIn}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      Worker misclassification is alarmingly common, affecting millions of Americans each year. Many employees are unaware of their rights and the wages they're legally entitled to.
+                    </motion.p>
+                  </div>
+                  <Statistics />
+                </div>
+              </section>
 
-                    className="text-xl text-gray-700 text-center my-5"
+              <motion.div className='my-10' variants={zoomIn}>
+                <QuoteComponent />
+              </motion.div>
+
+              <div className='flex justify-center '>
+                <motion.div className="mb-16 container" variants={slideUp}>
+                  <motion.h2
+                    className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20"
                     variants={fadeIn}
                     initial="hidden"
                     animate="visible"
                   >
-                    Worker misclassification is alarmingly common, affecting millions of Americans each year. Many employees are unaware of their rights and the wages they're legally entitled to.
-                  </motion.p>
+                    Nearly Every Industry is Affected
+                  </motion.h2>
+                  <motion.div
+                    className="grid md:grid-cols-4 gap-5"
+                    variants={fadeIn}
+                  >
+                    {[
+                      { title: "Healthcare Workers", icon: Stethoscope, description: "Nurses, medical assistants, and caregivers deserve fair compensation for their dedication." },
+                      { title: "Construction Workers", icon: HardHat, description: "Builders, electricians, and plumbers should be paid for every hour they work, including overtime." },
+                      { title: "IT Professionals", icon: Laptop, description: "Tech support, developers, and system administrators often work long hours that should be compensated." },
+                      { title: "And So Many More...", icon: Star, description: "Retail workers, executive assistant, customer service workers, stock clerks, and more should all be paid fairly for every hour they work" },
+                    ].map((category, index) => (
+                      <motion.div
+                        key={index}
+                        className="site-card-bg rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ type: "spring", stiffness: 100 }}
+                      >
+                        <category.icon className="h-16 w-16 text-blue-300 mx-auto mb-4" />
+                        <h3 className="text-xl font-semibold text-white mb-2">{category.title}</h3>
+                        <p className="text-blue-200">{category.description}</p>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </motion.div>
+              </div>
+
+
+              <div className='flex justify-center'>
+                <motion.div className="mb-16 container" variants={slideUp}>
+                  <h2 className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20">
+                    Why Choose SecureCounsel?
+
+                  </h2>
+                  <motion.div
+                    className="grid md:grid-cols-2 gap-8"
+                    variants={fadeIn}
+                  >
+                    {[
+                      { title: "Expert Legal Team", icon: Briefcase, description: "We selectively partner with employment law attorneys who have a proven track record of success." },
+                      { title: "No Upfront Costs", icon: DollarSign, description: "We work on a contingency basis - you only pay if we win your case." },
+                      { title: "Personalized Approach", icon: Users, description: "We treat each case with the individual attention it deserves." },
+                      { title: "Tech-Driven Approach", icon: Brain, description: "We get you answers faster by using AI to sift through your data & identify case viability." },
+
+                    ].map((feature, index) => (
+                      <motion.div
+                        key={index}
+                        className="site-card-bg rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <feature.icon className="h-16 w-16 text-blue-300 mx-auto mb-4" />
+                        <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
+                        <p className="text-blue-200">{feature.description}</p>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                </motion.div>
+              </div>
+
+              <div className='flex justify-center my-5'>
+                <div className="container flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                  <svg className="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                  </svg>
+                  <span className="sr-only">Info</span>
+                  <div className="ms-3 text-xl">
+                    Don't wait! Statute of limitations may apply. Get your free case review now before it's too late.
+                  </div>
                 </div>
-                <Statistics />
-              </section>
-
-              <motion.div className="mb-16" variants={slideUp}>
-                <motion.h2
-                  className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20"
-                  variants={fadeIn}
-                  initial="hidden"
-                  animate="visible"
-                >
-                  Commonly Misclassified Workers Include:      </motion.h2>
-                <motion.div
-                  className="grid md:grid-cols-4 gap-5"
-                  variants={fadeIn}
-                >
-                  {[
-                    { title: "Healthcare Workers", icon: Stethoscope, description: "Nurses, medical assistants, and caregivers deserve fair compensation for their dedication." },
-                    { title: "Construction Workers", icon: HardHat, description: "Builders, electricians, and plumbers should be paid for every hour they work, including overtime." },
-                    { title: "IT Professionals", icon: Laptop, description: "Tech support, developers, and system administrators often work long hours that should be compensated." },
-                    { title: "And So Many More...", icon: Star, description: "Retail workers, executive assistant,customer service workers, stock clerks, and more should all be paid fairly for every hour they work" },
-                  ].map((category, index) => (
-                    <motion.div
-                      key={index}
-                      className="bg-indigo-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ type: "spring", stiffness: 100 }}
-                    >
-                      <category.icon className="h-16 w-16 text-blue-300 mx-auto mb-4" />
-                      <h3 className="text-xl font-semibold text-white mb-2">{category.title}</h3>
-                      <p className="text-blue-200">{category.description}</p>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </motion.div>
-              <motion.div variants={zoomIn}>
-                <QuoteComponent />
-              </motion.div>
-
-              <motion.div className="mb-16" variants={slideUp}>
-                <h2 className="text-3xl lg:text-4xl font-semibold text-blue-900 text-center my-20">
-                  Why Choose SecureCounsel?
-
-                </h2>
-                <motion.div
-                  className="grid md:grid-cols-2 gap-8"
-                  variants={fadeIn}
-                >
-                  {[
-                    { title: "Expert Legal Team", icon: Briefcase, description: "We selectively partner with employment law attorneys who have a proven track record of success." },
-                    { title: "No Upfront Costs", icon: DollarSign, description: "We work on a contingency basis - you only pay if we win your case." },
-                    { title: "Personalized Approach", icon: Users, description: "We treat each case with the individual attention it deserves." },
-                    { title: "Tech-Driven Approach", icon: Brain, description: "We get you answers faster by using AI to sift through your data & identify case viability." },
-
-                  ].map((feature, index) => (
-                    <motion.div
-                      key={index}
-                      className="bg-indigo-700 rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <feature.icon className="h-16 w-16 text-blue-300 mx-auto mb-4" />
-                      <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
-                      <p className="text-blue-200">{feature.description}</p>
-                    </motion.div>
-                  ))}
-                </motion.div>
-              </motion.div>
-
-              <motion.div variants={slideUp} className="bg-red-800 border-l-4 border-red-500 p-6 mb-16 rounded-r-lg shadow-md">
-                <p className="text-red-200 font-semibold text-lg">Don't wait! Statute of limitations may apply. Get your free case review now before it's too late.</p>
-              </motion.div>
+              </div>
             </motion.div>
           )}
 
@@ -239,23 +260,7 @@ export default function AnimatedLandingPageComponent() {
         </AnimatePresence>
       </main>
 
-      <CaseAssessmentForm />
-
-      <motion.footer
-        initial="hidden"
-        animate="visible"
-        variants={fadeIn}
-        className="bg-blue-800 text-white py-12"
-      >
-        <div className="container mx-auto px-4 text-center">
-          <p>&copy; 2024 SecureCounsel. All rights reserved.</p>
-          <div className="mt-4 flex justify-center space-x-4">
-            <a href="#" className="hover:text-blue-300 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-blue-300 transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-blue-300 transition-colors">Contact Us</a>
-          </div>
-        </div>
-      </motion.footer>
+      <Footer /> {/* Use the Footer component */}
     </div>
   )
 }
