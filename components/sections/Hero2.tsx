@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { ChevronRight, Star } from 'lucide-react'
 import Image from 'next/image'
-
+import { CyclingSingleMyth } from '@/components/ui/cycling-single-myth'
 interface Hero2Props {
   scrollToForm?: () => void
 }
@@ -43,13 +43,14 @@ export function Hero2({ scrollToForm }: Hero2Props) {
         <HeroContent onScrollToForm={handleScrollToForm} />
         <div className="w-1/2 flex justify-end">
           <div className="relative w-full h-[500px]">
-            <Image
+            <CyclingSingleMyth />
+            {/* <Image
               src="/We_Help_SVG.svg"
               alt="We Help Cartoon"
               layout="fill"
               objectFit="contain"
               className="w-full h-full object-position-top"
-            />
+            /> */}
           </div>
         </div>
       </div>
@@ -83,12 +84,12 @@ function HeroContent({ onScrollToForm }: { onScrollToForm: () => void }) {
     <div className="text-left mx-auto lg:mx-0 w-1/2">
 
       <motion.h2
-        className="text-xl md:text-3xl lg:text-4xl font-semibold text-blue-200 mb-8"
+        className="text-xl md:text-3xl lg:text-4xl font-semibold text-white mb-8"
         variants={fadeIn}
         initial="hidden"
         animate="visible"
       >
-        You worked hard. Let&apos;s secure what you deserve.
+        You may be wrongly denied overtime pay<span className='text-blue-200'>...and not even know it.</span>
       </motion.h2>
       <motion.p
         className="text-lg text-white mb-12"
@@ -97,7 +98,7 @@ function HeroContent({ onScrollToForm }: { onScrollToForm: () => void }) {
         animate="visible"
         transition={{ delay: 1 }}
       >
-        If you&apos;ve worked over 40 hours a week and been paid overtime, your employer or former employer may owe you significant compensation. The top 10 wage & hour cases in 2023 recovered{' '}
+        If you&apos;ve worked over 40 hours a week and not been paid overtime, your employer or former employer may owe you significant compensation. The top 10 wage & hour cases in 2023 recovered{' '}
         <span className="font-bold text-yellow-400">over $740 million</span> in unpaid wages for workers like you.
         It&apos;s time to stand up for your rights and secure your fair compensation.
       </motion.p>

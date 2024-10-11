@@ -15,7 +15,7 @@ import HeroHeadline from './sections/hero-headline'
 import { QuoteComponent } from './sections/quote-component'
 import { Footer } from './sections/Footer' // Import the Footer component
 import UserIntakeForm from './sections/user-intake-form'
-
+import { ArticlePreviewComponent } from './ui/article-preview'
 export default function AnimatedLandingPageComponent() {
   const [step, setStep] = useState(1)
   const [industry, setIndustry] = useState("")
@@ -76,15 +76,16 @@ export default function AnimatedLandingPageComponent() {
                       initial="hidden"
                       animate="visible"
                     >
-                      You may be wrongly denied overtime pay...<span className="text-blue-950 font-bold">and not even know it.</span>
+                      You've worked hard. Let's secure what you deserve.
                     </motion.h2>
+                    {/* <ArticlePreviewComponent url="https://www.cnn.com/weather/live-news/hurricane-milton-florida-damage-10-11-24/index.html" /> */}
                     <motion.p
                       className="text-xl text-slate text-center mx-auto w-1/2"
                       variants={fadeIn}
                       initial="hidden"
                       animate="visible"
                     >
-                      Worker misclassification is alarmingly common, affecting millions of Americans each year. Many employees are unaware of their rights and the wages they're legally entitled to.
+                      Worker misclassification is alarmingly common, affecting millions of Americans each year. Many employees are unaware of their rights and the wages they're legally entitled to. <span className='text-indigo-700 font-semibold'>That's where we come in.</span>
                     </motion.p>
                   </div>
                   <Statistics />

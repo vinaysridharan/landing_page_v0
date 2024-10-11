@@ -14,6 +14,9 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { MessageSquare, Info, ChevronLeft, ChevronRight, Scale, Bot, ShieldCheck } from 'lucide-react' // Importing ShieldCheck icon for security or compliance
+import { openai } from '@ai-sdk/openai';
+import { streamText, generateText } from 'ai';
+
 
 interface FormData {
   name: string,
@@ -58,6 +61,7 @@ export function CaseAssessmentForm() {
   const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+    handleInputChange(e as any)
   }
 
   const handleSliderChange = (value: number[]) => {
@@ -69,12 +73,18 @@ export function CaseAssessmentForm() {
   }
 
   const handleNext = async () => {
+   
+      handleSubmit({ preventDefault: () => { }, message: '' } as any)
+
+    
     if (step === 4) {
       setProgress(80)
       setStep(step + 1)
+      
 
       const prompt = `Provide a brief summary about the employer "${formData.employerName}" in the context of wage and hour disputes or employment practices relevant to "${formData.jobTitle}".`
-      await handleSubmit({ preventDefault: () => { }, message: prompt } as any)
+      
+      // await handleSubmit({ preventDefault: () => { }, message: prompt } as any)
     } else {
       const nextStep = step + 1
       setStep(nextStep)
@@ -404,7 +414,7 @@ export function CaseAssessmentForm() {
           <Card className="flex flex-col justify-between rounded-[30px] backdrop-blur-sm bg-white/90 border-blue-200 shadow-xl h-[600px]">
             <div>
               <CardHeader>
-                <Bot className="h-8 w-8 text-slate-500" />
+                {/* <Bot className="h-8 w-8 text-slate-500" /> */}
                 <CardTitle className="text-2xl text-blue-800"><span className="text-slate-500">AI-Powered</span> Instant Case Assessment</CardTitle>
               </CardHeader>
               <CardContent>
@@ -419,7 +429,33 @@ export function CaseAssessmentForm() {
                 </motion.div>
               </CardContent>
             </div>
-            <CardFooter className="flex justify-between">
+           
+
+          {/* AI Response Message Box */}
+          {messages.length >= 1 && (
+            <Card className="bg-blue-50 border-blue-200 shadow-lg mb-8">
+              <CardHeader>
+                <CardTitle className="text-xl text-blue-800 flex items-center">
+                  <Bot className="mr-2 h-6 w-6" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent className='text-indigo-900'>
+                {/* How do i know what is in the messages? I need to set up a system message */}
+                {messages.slice(-1).map(message => (
+                  <div key={message.id} className="text-sm leading-relaxed mb-2">
+                    {message.role === 'assistant' ? message.content : ''}
+                  </div>
+                ))}
+                {isLoading && (
+                  <div className="flex items-center text-sm text-blue-600">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                    Analyzing your case...
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+           <CardFooter className="flex justify-between">
               <Button
                 onClick={handlePrevious}
                 disabled={step === 0 || isLoading}
@@ -446,31 +482,6 @@ export function CaseAssessmentForm() {
               </Button>
             </CardFooter>
           </Card>
-
-          {/* AI Response Message Box */}
-          {messages.length > 0 && (
-            <Card className="bg-blue-50 border-blue-200 shadow-lg mb-8">
-              <CardHeader>
-                <CardTitle className="text-xl text-blue-800 flex items-center">
-                  <Bot className="mr-2 h-6 w-6" />
-                  AI Insights
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {messages.map((message, index) => (
-                  <p key={index} className="text-sm leading-relaxed mb-2">
-                    {message.content}
-                  </p>
-                ))}
-                {isLoading && (
-                  <div className="flex items-center text-sm text-blue-600">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                    Analyzing your case...
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
         </div>
       </main>
     </div>

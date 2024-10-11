@@ -28,7 +28,8 @@ export default function HeroHeadline() {
     },
   }
 
-  const words = ['Empowering', 'Workers,', 'Ensuring', 'Fair', 'Compensation']
+  // const words = ['Empowering', 'Workers,', 'Ensuring', 'Fair', 'Compensation']
+  const words = ['Overworked?', 'Underpaid?', 'We', 'Can', 'Help']
   return (
     <div className="relative h-[600px] w-full overflow-hidden rounded-lg shadow-2xl">
       {/* Video Background */}
@@ -69,7 +70,7 @@ export default function HeroHeadline() {
         Your browser does not support the video tag.
       </video>
       {/* Overlay to improve text readability */}
-      <div className="absolute inset-0 bg-blue-900 bg-opacity-50"></div>
+      <div className="absolute inset-0 bg-gray-900 bg-opacity-60"></div>
       {/* Content */}
       <div className="relative z-10 flex flex-col justify-center items-start gap-10 h-full p-10">
         <motion.h1
@@ -84,7 +85,7 @@ export default function HeroHeadline() {
               className="inline-block mr-5 mb-3"
               variants={wordVariants}
             >
-              {index === 0 || index === 3 ? (
+              {index === 0 || index === 1 ? (
                 <span className="text-indigo-400">{word}</span>
               ) : (
                 <span className="text-white">{word}</span>
@@ -100,7 +101,7 @@ export default function HeroHeadline() {
           transition={{ delay: 0.8, duration: 0.6 }}
         >
           <p className="text-lg md:text-xl text-white">
-            Most Americans work over 40 hours a week. Few get paid overtime wages. <span className="text-blue-300 font-bold"><br></br>It's time to fight back.</span>
+            Most Americans work over 40 hours a week. Few get paid overtime wages. <span className="text-indigo-400 font-bold"><br></br>It's time to fight back.</span>
           </p>
         </motion.div>
         <motion.div

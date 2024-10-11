@@ -48,8 +48,8 @@ export function Header() {
           <Link className="transition-colors hover:text-blue-700" href="/howitworks">
             How It Works
           </Link>
-          <Link className="transition-colors hover:text-blue-700" href="#">
-            Success Stories
+          <Link className="transition-colors hover:text-blue-700" href="/learningcenter">
+            Learning Center
           </Link>
           <Link className="transition-colors hover:text-blue-700" href="#">
             About Us
