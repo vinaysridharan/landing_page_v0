@@ -53,6 +53,8 @@ body {
   animation: gradient 15s ease infinite;
   font-family: sans-serif;
   min-height: 100vh;
+  margin-left: 10px;
+  margin-right: 5px;
 }
 
 @layer utilities {

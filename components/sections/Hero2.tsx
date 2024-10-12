@@ -39,9 +39,9 @@ export function Hero2({ scrollToForm }: Hero2Props) {
 
   return (
     <section className="relative w-full bg-gradient-to-br from-indigo-900 to-indigo-600 flex justify-center items-center">
-      <div className="container flex items-center justify-between mt-20 px-50 gap-20">
+      <div className="mx-5 container flex flex-col md:flex-row items-center justify-between mt-20 px-50 gap-10">
         <HeroContent onScrollToForm={handleScrollToForm} />
-        <div className="w-1/2 flex justify-end">
+        <div className="w-full md:w-1/2 flex justify-end">
           <div className="relative w-full h-[500px]">
             <CyclingSingleMyth />
             {/* <Image
@@ -81,7 +81,7 @@ function VideoBackground({ videoRef }: { videoRef: React.RefObject<HTMLVideoElem
 
 function HeroContent({ onScrollToForm }: { onScrollToForm: () => void }) {
   return (
-    <div className="text-left mx-auto lg:mx-0 w-1/2">
+    <div className="text-left w-full md:w-1/2">
 
       <motion.h2
         className="text-xl md:text-3xl lg:text-4xl font-semibold text-white mb-8"
