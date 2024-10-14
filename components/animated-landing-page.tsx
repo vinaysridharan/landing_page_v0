@@ -52,11 +52,11 @@ export default function AnimatedLandingPageComponent() {
               exit="hidden"
               variants={fadeIn}
             >
-              <div className='relative min-h-screen w-full flex justify-center mt-10 px-4'>
+              <div className='relative min-h-screen w-full flex justify-center px-4'>
                 <div className='container flex flex-col lg:flex-row justify-between items-center gap-10'>
                   <div className='w-full lg:w-1/2 mb-10 lg:mb-0'>
                     <HeroHeadline />
- 
+
                   </div>
                   <div className='w-full lg:w-1/2 mb-10 lg:mb-0'>
                     <CaseAssessmentForm />

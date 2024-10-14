@@ -396,7 +396,7 @@ export function CaseAssessmentForm() {
   }
 
   return (
-    <div className="mx-10 flex flex-col items-center bg-gradient-to-b from-blue-200 to-transparent to-transparent rounded-[40px]">
+    <div className="mx-10 h-[600px] flex flex-col items-center bg-blue-200 rounded-[40px]">
       {/* <header className="w-full bg-blue-600 text-white py-6 mb-8">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold flex items-center justify-center">
@@ -411,7 +411,7 @@ export function CaseAssessmentForm() {
             <Progress value={progress} className="w-full" />
             <p className="text-sm text-gray-600 mt-2 text-center">{progress.toFixed(0)}% Complete</p>
           </div> */}
-          <Card className="flex flex-col justify-between rounded-[30px] backdrop-blur-sm bg-white/90 border-blue-200 shadow-xl h-[600px]">
+          <Card className="flex flex-col justify-between rounded-[30px] backdrop-blur-sm bg-white/90 border-blue-200 shadow-xl h-[540px]">
             <div>
               <CardHeader>
                 {/* <Bot className="h-8 w-8 text-slate-500" /> */}

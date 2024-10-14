@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Clock, DollarSign, Calendar } from "lucide-react"
+import { Clock, DollarSign, Calendar, ArrowDown, ArrowDown01Icon, CircleChevronDown, CircleChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -77,7 +77,7 @@ export function CyclingSingleMyth() {
           onClick={handlePrevious}
           aria-label="Previous myth"
         >
-          <Clock className="h-4 w-4" />
+          <CircleChevronDown className="h-4 w-4" />
         </Button>
         <Button
           variant="ghost"
@@ -86,7 +86,7 @@ export function CyclingSingleMyth() {
           onClick={handleNext}
           aria-label="Next myth"
         >
-          <Clock className="h-4 w-4 rotate-180" />
+          <CircleChevronUp className="h-4 w-4" />
         </Button>
       </div>
       <div className="flex justify-center">

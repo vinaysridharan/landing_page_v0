@@ -31,7 +31,7 @@ export default function HeroHeadline() {
   // const words = ['Empowering', 'Workers,', 'Ensuring', 'Fair', 'Compensation']
   const words = ['Overworked?', 'Underpaid?', 'We', 'Can', 'Help']
   return (
-    <div className="relative h-[600px] w-full overflow-hidden rounded-lg shadow-2xl">
+    <div className="relative h-[600px] w-full overflow-hidden rounded-[40px] shadow-2xl">
       {/* Video Background */}
       <video
         autoPlay
