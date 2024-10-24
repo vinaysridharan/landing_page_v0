@@ -1,34 +1,45 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button"
-import { Gavel, Menu, X } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet"
 
-/**
- * Header component for the SecureCounsel website.
- * 
- * This component renders the main navigation header, which includes:
- * - The SecureCounsel logo and brand name
- * - Navigation links (desktop view)
- * - A mobile menu using a slide-out sheet
- * - A call-to-action button
- * 
- * The component uses React hooks for state management and Next.js components
- * for optimized image loading and client-side routing.
- */
 export function Header() {
   const [open, setOpen] = useState(false)
+  const [showRedBar, setShowRedBar] = useState(true)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setShowRedBar(false)
+      } else {
+        setShowRedBar(true)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className='h-10 flex justify-center items-center bg-red-500 text-white'>Don't wait! Statute of limitations may apply. Get your free case review now before it's too late.</div>
+      <div 
+        className={`h-10 flex justify-center items-center bg-red-500 text-white overflow-hidden transition-all duration-300 ease-in-out ${
+          showRedBar ? 'max-h-10 opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        Don't wait! Statute of limitations may apply. Get your free case review now before it's too late.
+      </div>
       <div className="container mx-auto flex h-20 items-center justify-between">
         <div className="flex items-center gap-10">
           <Link href="/" className="flex items-center space-x-2">

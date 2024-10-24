@@ -1,10 +1,11 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET (req: NextApiRequest, res: NextApiResponse) {
-  const { url } = req.query;
 
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const url = searchParams.get('url');
   if (!url || typeof url !== 'string') {
-    return res.status(400).json({ error: 'Invalid URL' });
+    return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
   }
 
   try {
@@ -17,9 +18,9 @@ export async function GET (req: NextApiRequest, res: NextApiResponse) {
       url: url,
     };
 
-    res.status(200).json(metadata);
+    return NextResponse.json(metadata, { status: 200 });
   } catch (error) {
     console.error('Error fetching metadata:', error);
-    res.status(500).json({ error: 'Failed to fetch metadata' });
+    return NextResponse.json({ error: 'Failed to fetch metadata' }, { status: 500 });
   }
 }

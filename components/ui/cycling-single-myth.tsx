@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Clock, DollarSign, Calendar, ArrowDown, ArrowDown01Icon, CircleChevronDown, CircleChevronUp } from "lucide-react"
+import { Clock, DollarSign, Calendar, CircleChevronDown, CircleChevronUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { motion, AnimatePresence } from "framer-motion"
 

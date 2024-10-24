@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 /**
  * Page component for the "How it works" section.
  * 
@@ -32,6 +32,7 @@ export default function Page() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 auto-rows-fr">
         {steps.map((step, index) => (
           <motion.div
+            key={index}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}

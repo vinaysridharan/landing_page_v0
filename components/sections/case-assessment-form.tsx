@@ -1,104 +1,202 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/no-unescaped-entities */
 'use client'
 
-import React from 'react'
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState, useEffect, useRef, ReactNode } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useChat } from 'ai/react'
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
-import { Progress } from "@/components/ui/progress"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import { MessageSquare, Info, ChevronLeft, ChevronRight, Scale, Bot, ShieldCheck } from 'lucide-react' // Importing ShieldCheck icon for security or compliance
-import { openai } from '@ai-sdk/openai';
-import { streamText, generateText } from 'ai';
-
+import { Info, ChevronLeft, ChevronRight, Bot, ShieldCheck, X } from 'lucide-react'
 
 interface FormData {
-  name: string,
-  email: string,
-  phone: string,
-  hoursWorked: number,
-  overtimePaid: string,
-  otherOvertimeDetails: string,
-  weeklyWage: number,
-  employerName: string,
-  jobTitle: string,
-  role: string,
-  state: string,
-  otherStateDetails: string,
-  breaksReceived: string,
-  otherRoleDetails: string,
+  name: string;
+  email: string;
+  phone: string;
+  hoursWorked: number;
+  overtimePaid: string;
+  otherOvertimeDetails: string;
+  weeklyWage: number;
+  employerName: string;
+  jobTitle: string;
+  role: string;
+  otherRoleDetails: string;
+}
+
+const initialFormData: FormData = {
+  name: '',
+  email: '',
+  phone: '',
+  hoursWorked: 40,
+  overtimePaid: '',
+  otherOvertimeDetails: '',
+  weeklyWage: 500,
+  employerName: '',
+  jobTitle: '',
+  role: '',
+  otherRoleDetails: '',
 }
 
 export function CaseAssessmentForm() {
   const [step, setStep] = useState(0)
   const [progress, setProgress] = useState(0)
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    email: '',
-    phone: '',
-    hoursWorked: 40,
-    overtimePaid: '',
-    otherOvertimeDetails: '',
-    weeklyWage: 500,
-    employerName: '',
-    jobTitle: '',
-    role: '',
-    state: '',
-    otherStateDetails: '',
-    breaksReceived: '',
-    otherRoleDetails: '',
-  })
+  const [formData, setFormData] = useState<FormData>(initialFormData)
   const [employerConfirmed, setEmployerConfirmed] = useState(false)
+  const [errors, setErrors] = useState<Partial<FormData>>({})
+  const [showAIResponse, setShowAIResponse] = useState(false)
+  const [stableAIContent, setStableAIContent] = useState('')
+  const lastMessageRef = useRef('')
 
   const { isLoading, messages, input, handleInputChange, handleSubmit } = useChat();
+
+  useEffect(() => {
+    setProgress(((step + 1) / 7) * 100)
+  }, [step])
+
+  useEffect(() => {
+    console.log("use effect for maeesages")
+    if (messages.length > 0) {
+      if (showAIResponse === false) {
+        setShowAIResponse(true)
+    console.log("use effect for maeesages making is on ")
+      }
+      const lastMessage = messages[messages.length - 1]
+      if (lastMessage.role === 'assistant' && lastMessage.content !== lastMessageRef.current) {
+        lastMessageRef.current = lastMessage.content
+        setStableAIContent(lastMessage.content)
+      }
+    }
+  }, [messages])
 
   const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-    handleInputChange(e as any)
+    setErrors(prev => ({ ...prev, [name]: '' }))
+    handleInputChange(e as React.ChangeEvent<HTMLInputElement>)
   }
 
   const handleSliderChange = (value: number[]) => {
-    setFormData(prev => ({ ...prev, hoursWorked: value[0] }))
+    setFormData(prev => ({ ...prev, [step === 2 ? 'weeklyWage' : 'hoursWorked']: value[0] }))
   }
 
   const handleRadioChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }))
+    setErrors(prev => ({ ...prev, [name]: '' }))
+  }
+
+  const validateStep = (): boolean => {
+    const newErrors: Partial<FormData> = {}
+    let isValid = true
+
+    switch (step) {
+      case 0:
+        if (!formData.name.trim()) newErrors.name = 'Name is required'
+        if (!formData.email.trim()) newErrors.email = 'Email is required'
+        else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format'
+        if (!formData.phone.trim()) newErrors.phone = 'Phone is required'
+        else if (!/^\d{10}$/.test(formData.phone)) newErrors.phone = 'Invalid phone number'
+        break
+      case 1:
+        if (!formData.overtimePaid) newErrors.overtimePaid = 'Please select an option'
+        if (formData.overtimePaid === 'other' && !formData.otherOvertimeDetails.trim()) {
+          newErrors.otherOvertimeDetails = 'Please provide details'
+        }
+        break
+      case 3:
+        if (!formData.employerName.trim()) newErrors.employerName = 'Employer name is required'
+        if (!formData.jobTitle.trim()) newErrors.jobTitle = 'Job title is required'
+        break
+      case 5:
+        if (!formData.role) newErrors.role = 'Please select a role'
+        if (formData.role === 'other' && !formData.otherRoleDetails.trim()) {
+          newErrors.otherRoleDetails = 'Please provide details'
+        }
+        break
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      isValid = false
+    }
+
+    return isValid
+  }
+
+  interface SubmitEvent {
+    preventDefault: () => void;
+    message: string;
   }
 
   const handleNext = async () => {
-   
-      handleSubmit({ preventDefault: () => { }, message: '' } as any)
+    if (!validateStep()) return
 
-    
     if (step === 4) {
       setProgress(80)
       setStep(step + 1)
-      
 
       const prompt = `Provide a brief summary about the employer "${formData.employerName}" in the context of wage and hour disputes or employment practices relevant to "${formData.jobTitle}".`
-      
-      // await handleSubmit({ preventDefault: () => { }, message: prompt } as any)
+
+      await handleSubmit({ preventDefault: () => { }, message: prompt } as SubmitEvent)
     } else {
-      const nextStep = step + 1
-      setStep(nextStep)
-      setProgress(((nextStep + 1) / 7) * 100)
+      setStep(prev => prev + 1)
+      handleSubmit({ preventDefault: () => { }, message: '' } as SubmitEvent)
     }
   }
 
   const handlePrevious = () => {
-    const prevStep = step - 1
-    setStep(prevStep)
-    setProgress(((prevStep + 1) / 7) * 100)
+    setStep(prev => prev - 1)
   }
 
-  const InfoButton = ({ content }: { content: string }) => (
+  const AIThinkingBalloon = () => (
+    <AnimatePresence>
+      {showAIResponse && (
+        <div
+          // initial={{ opacity: 0, y: -50 }}
+          // animate={{ opacity: 1, y: 0 }}
+          // exit={{ opacity: 0, y: -50 }}
+          // transition={{ duration: 0.3 }}
+          className="absolute top-4 left-4 right-4 bg-blue-100 border border-blue-300 rounded-lg p-4 shadow-lg z-50"
+        >
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 right-2"
+            onClick={() => setShowAIResponse(false)}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+          <div className="flex items-start space-x-2">
+            <Bot className="h-6 w-6 text-blue-500 mt-1" />
+            <div>
+              <p className="font-semibold text-blue-700">AI Assistant</p>
+              <p className="text-sm text-blue-800">
+                {stableAIContent}
+              </p>
+            </div>
+          </div>
+          {isLoading && (
+            <div className="flex items-center text-sm text-blue-600 mt-2">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+              Analyzing your case...
+            </div>
+          )}
+        </div>
+      )}
+    </AnimatePresence>
+  )
+
+  interface InfoButtonProps {
+    content: ReactNode; // Change from string to ReactNode
+  }
+
+  const InfoButton: React.FC<InfoButtonProps> = ({ content }: { content: string }) => (
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
@@ -137,8 +235,9 @@ export function CaseAssessmentForm() {
                 value={formData.name}
                 onChange={handleFormInputChange}
                 required
-                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
+                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd]'
               />
+              {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="email" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -152,8 +251,9 @@ export function CaseAssessmentForm() {
                 value={formData.email}
                 onChange={handleFormInputChange}
                 required
-                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
+                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd]'
               />
+              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -167,26 +267,25 @@ export function CaseAssessmentForm() {
                 value={formData.phone}
                 onChange={handleFormInputChange}
                 required
-                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
+                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd]'
               />
+              {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
             </div>
-            {/* ShieldCheck icon to indicate data protection */}
-            {/* Info icon for Data Treatment and Encryption */}
             <div className="flex items-center space-x-2">
-              <ShieldCheck className="h-8 w-8 text-slate-500" /> 
+              <ShieldCheck className="h-8 w-8 text-slate-500" />
               <Label htmlFor="data-protection-info" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                 We take your privacy and data security very seriously
               </Label>
               <InfoButton content={
                 <>
                   <p className="text-sm text-gray-600">
-                    <strong>Data Protection:</strong>All the information you provide is encrypted both in transit and at rest using industry-standard encryption protocols. This ensures that your personal data, including your name, email, and phone number, is protected from unauthorized access.
+                    <strong>Data Protection:</strong> All the information you provide is encrypted both in transit and at rest using industry-standard encryption protocols.
                   </p>
                   <p className="text-sm text-gray-600">
-                    <strong>Encryption Details:</strong> We use TLS (Transport Layer Security) to encrypt data transmitted between your browser and our servers. Additionally, your data is stored in an encrypted format using AES-256 (Advanced Encryption Standard) on our servers. This dual-layer encryption approach helps safeguard your information throughout the entire process.
+                    <strong>Encryption Details:</strong> We use TLS for data transmission and AES-256 for data storage.
                   </p>
                   <p className="text-sm text-gray-600">
-                    <strong>Data Usage:</strong> The contact information you provide is used solely for the purpose of personalizing our communication with you and for any necessary legal proceedings. We do not share your personal information with third parties without your explicit consent.
+                    <strong>Data Usage:</strong> Your information is used solely for case assessment and communication purposes.
                   </p>
                 </>
               } />
@@ -215,16 +314,20 @@ export function CaseAssessmentForm() {
                   <Label className='text-base' htmlFor="other">Other</Label>
                 </div>
               </RadioGroup>
+              {errors.overtimePaid && <p className="text-red-500 text-sm">{errors.overtimePaid}</p>}
             </div>
             {formData.overtimePaid === 'other' && (
-              <Textarea
-                name="otherOvertimeDetails"
-                placeholder="Please provide details about your overtime pay situation..."
-                value={formData.otherOvertimeDetails}
-                onChange={handleFormInputChange}
-                required
-                className='text-base min-h-[100px] border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
-              />
+              <div className="space-y-2">
+                <Textarea
+                  name="otherOvertimeDetails"
+                  placeholder="Please provide details about your overtime pay situation..."
+                  value={formData.otherOvertimeDetails}
+                  onChange={handleFormInputChange}
+                  required
+                  className='text-base min-h-[100px] border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd]'
+                />
+                {errors.otherOvertimeDetails && <p className="text-red-500 text-sm">{errors.otherOvertimeDetails}</p>}
+              </div>
             )}
           </div>
         )
@@ -241,7 +344,7 @@ export function CaseAssessmentForm() {
                 name="weeklyWage"
                 min={0}
                 max={3000}
-                step={10} // Reduced step value to make the slider easier to move
+                step={10}
                 value={[formData.weeklyWage]}
                 onValueChange={handleSliderChange}
                 className="w-full"
@@ -272,8 +375,9 @@ export function CaseAssessmentForm() {
                 value={formData.employerName}
                 onChange={handleFormInputChange}
                 required
-                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
+                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd]'
               />
+              {errors.employerName && <p className="text-red-500 text-sm">{errors.employerName}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="job-title" className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -287,8 +391,9 @@ export function CaseAssessmentForm() {
                 value={formData.jobTitle}
                 onChange={handleFormInputChange}
                 required
-                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd] '
+                className='text-base border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd]'
               />
+              {errors.jobTitle && <p className="text-red-500 text-sm">{errors.jobTitle}</p>}
             </div>
           </div>
         )
@@ -366,16 +471,20 @@ export function CaseAssessmentForm() {
                   <Label htmlFor="other-role">Other (I don't think either of these fit)</Label>
                 </div>
               </RadioGroup>
+              {errors.role && <p className="text-red-500 text-sm">{errors.role}</p>}
             </div>
             {formData.role === 'other' && (
-              <Textarea
-                name="otherRoleDetails"
-                placeholder="Please describe your role..."
-                value={formData.otherRoleDetails}
-                onChange={handleFormInputChange}
-                className="min-h-[100px]"
-                required
-              />
+              <div className="space-y-2">
+                <Textarea
+                  name="otherRoleDetails"
+                  placeholder="Please describe your role..."
+                  value={formData.otherRoleDetails}
+                  onChange={handleFormInputChange}
+                  className="min-h-[100px]"
+                  required
+                />
+                {errors.otherRoleDetails && <p className="text-red-500 text-sm">{errors.otherRoleDetails}</p>}
+              </div>
             )}
           </div>
         )
@@ -396,26 +505,16 @@ export function CaseAssessmentForm() {
   }
 
   return (
-    <div className="mx-10 h-[600px] flex flex-col items-center bg-blue-200 rounded-[40px]">
-      {/* <header className="w-full bg-blue-600 text-white py-6 mb-8">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold flex items-center justify-center">
-            <Scale className="mr-2 h-8 w-8" />
-            Instant AI-Powered Case Assessment
-          </h1>
-        </div>
-      </header> */}
+    <div className="mx-10 h-[600px] flex flex-col items-center bg-blue-200 rounded-[40px] relative">
+      <AIThinkingBalloon />
       <main className="flex-grow container mx-auto px-8 py-8">
         <div className="mx-auto">
-          {/* <div className="mb-8">
-            <Progress value={progress} className="w-full" />
-            <p className="text-sm text-gray-600 mt-2 text-center">{progress.toFixed(0)}% Complete</p>
-          </div> */}
           <Card className="flex flex-col justify-between rounded-[30px] backdrop-blur-sm bg-white/90 border-blue-200 shadow-xl h-[540px]">
             <div>
               <CardHeader>
-                {/* <Bot className="h-8 w-8 text-slate-500" /> */}
-                <CardTitle className="text-2xl text-blue-800"><span className="text-slate-500">AI-Powered</span> Instant Case Assessment</CardTitle>
+                <CardTitle className="text-2xl text-blue-800">
+                  <span className="text-slate-500">AI-Powered</span> Instant Case Assessment
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <motion.div
@@ -424,38 +523,12 @@ export function CaseAssessmentForm() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -50 }}
                   transition={{ duration: 0.3 }}
-              >
+                >
                   {renderForm()}
                 </motion.div>
               </CardContent>
             </div>
-           
-
-          {/* AI Response Message Box */}
-          {messages.length >= 1 && (
-            <Card className="bg-blue-50 border-blue-200 shadow-lg mb-8">
-              <CardHeader>
-                <CardTitle className="text-xl text-blue-800 flex items-center">
-                  <Bot className="mr-2 h-6 w-6" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent className='text-indigo-900'>
-                {/* How do i know what is in the messages? I need to set up a system message */}
-                {messages.slice(-1).map(message => (
-                  <div key={message.id} className="text-sm leading-relaxed mb-2">
-                    {message.role === 'assistant' ? message.content : ''}
-                  </div>
-                ))}
-                {isLoading && (
-                  <div className="flex items-center text-sm text-blue-600">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                    Analyzing your case...
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
-           <CardFooter className="flex justify-between">
+            <CardFooter className="flex justify-between">
               <Button
                 onClick={handlePrevious}
                 disabled={step === 0 || isLoading}

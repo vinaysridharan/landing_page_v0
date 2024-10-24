@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { useRef } from 'react'
-import { Header } from './Header'
-import { Hero } from './Hero'
-import { Statistics } from './Statistics'
-import { WorkerCategories } from './WorkerCategories'
-import { Features } from './Features'
-import { CaseAssessmentForm } from './case-assessment-form'
+import { Header } from './sections/Header'
+import { Hero } from './sections/Hero'
+import { Statistics } from './sections/Statistics'
+import { WorkerCategories } from './sections/WorkerCategories'
+import { Features } from './sections/Features'
+import { CaseAssessmentForm } from './sections/case-assessment-form'
 
 export function LandingPageComponent() {
   const aiAssessmentRef = useRef<HTMLDivElement>(null)

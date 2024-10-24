@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 'use client'
 
 import { useState } from 'react'
@@ -6,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ArrowRight, CheckCircle, DollarSign, Users, Brain, Briefcase, HardHat, Laptop, Stethoscope, Gavel, Star } from "lucide-react"
+import { ArrowRight, CheckCircle, DollarSign, Users, Brain, Briefcase, HardHat, Laptop, Stethoscope, Star } from "lucide-react"
 import Image from 'next/image'
 import { Hero2 } from './sections/Hero2'
 import { CaseAssessmentForm } from './sections/case-assessment-form'
@@ -14,8 +15,6 @@ import { Statistics } from './sections/Statistics'
 import HeroHeadline from './sections/hero-headline'
 import { QuoteComponent } from './sections/quote-component'
 import { Footer } from './sections/Footer' // Import the Footer component
-import UserIntakeForm from './sections/user-intake-form'
-import { ArticlePreviewComponent } from './ui/article-preview'
 export default function AnimatedLandingPageComponent() {
   const [step, setStep] = useState(1)
   const [industry, setIndustry] = useState("")

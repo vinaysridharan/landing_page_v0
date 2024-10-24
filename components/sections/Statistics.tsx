@@ -1,4 +1,3 @@
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { CountUp } from "@/components/ui/count-up"
 import { motion } from "framer-motion"
 const fadeIn = {
