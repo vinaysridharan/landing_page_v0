@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,12 +10,14 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { ArrowRight, CheckCircle, DollarSign, Users, Brain, Briefcase, HardHat, Laptop, Stethoscope, Star } from "lucide-react"
 import Image from 'next/image'
 import { Hero2 } from './sections/Hero2'
-import { CaseAssessmentForm } from './sections/case-assessment-form'
-import { Statistics } from './sections/Statistics'
-import HeroHeadline from './sections/hero-headline'
-import { QuoteComponent } from './sections/quote-component'
-import { Footer } from './sections/Footer' // Import the Footer component
+import { CaseAssessmentForm } from '@/components/form/case-assessment-form'
+import { Statistics } from '@/components/sections/Statistics'
+import HeroHeadline from '@/components/sections/hero-headline'
+import { QuoteComponent } from '@/components/sections/quote-component'
+import { Footer } from '@/components/sections/Footer' // Import the Footer component
 export default function AnimatedLandingPageComponent() {
+
+
   const [step, setStep] = useState(1)
   const [industry, setIndustry] = useState("")
 
@@ -259,7 +261,6 @@ export default function AnimatedLandingPageComponent() {
           )}
         </AnimatePresence>
       </main>
-
       <Footer /> {/* Use the Footer component */}
     </div>
   )

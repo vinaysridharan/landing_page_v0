@@ -1,5 +1,4 @@
 import AnimatedLandingPageComponent  from "@/components/animated-landing-page"
-
 /**
  * Page component for the experimental landing page.
  * 

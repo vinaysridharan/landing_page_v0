@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Menu } from 'lucide-react'
@@ -15,6 +16,7 @@ import {
 export function Header() {
   const [open, setOpen] = useState(false)
   const [showRedBar, setShowRedBar] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,6 +32,10 @@ export function Header() {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
+
+  const handleGetStarted = () => {
+    router.push('/?expand=true')
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -70,7 +76,7 @@ export function Header() {
           </Link>
         </nav>
         <div className="flex items-center gap-4 mr-10">
-          <Button className="hidden md:flex">Get Started</Button>
+          <Button className="hidden md:flex" onClick={handleGetStarted}>Get Started</Button>
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -92,7 +98,10 @@ export function Header() {
                 <Link className="text-sm font-medium hover:underline" href="#" onClick={() => setOpen(false)}>
                   Contact
                 </Link>
-                <Button className="mt-4 hover:scale-105">Get Started</Button>
+                <Button className="mt-4 hover:scale-105" onClick={() => {
+                  setOpen(false)
+                  handleGetStarted()
+                }}>Get Started</Button>
               </nav>
             </SheetContent>
           </Sheet>
