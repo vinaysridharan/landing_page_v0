@@ -1,32 +1,57 @@
-import React from 'react';
+'use client'
+
+import React, { useState, useEffect } from 'react';
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { InfoButton } from "@/components/ui/info-button";
 
-interface FormData {
-  overtimePaid: string;
-  otherOvertimeDetails: string;
-}
-
-interface Errors {
-  overtimePaid?: string;
-  otherOvertimeDetails?: string;
-}
-
 interface PaidOvertimeStepProps {
-  formData: FormData;
-  errors: Errors;
-  handleRadioChange: (name: string, value: string) => void;
-  handleFormInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  formData: {
+    overtimePaid: string;
+    otherOvertimeDetails: string;
+  };
+  updateFormData: (newData: Partial<PaidOvertimeStepProps['formData']>) => void;
+  setErrors: React.Dispatch<React.SetStateAction<Partial<PaidOvertimeStepProps['formData']>>>;
+  setAIContext: React.Dispatch<React.SetStateAction<string>>;
+  triggerAIValidation: () => void;
 }
 
-export const PaidOvertimeStep: React.FC<PaidOvertimeStepProps> = ({
-  formData,
-  errors,
-  handleRadioChange,
-  handleFormInputChange
-}) => {
+export function PaidOvertimeStep({ formData, updateFormData, setErrors, setAIContext, triggerAIValidation }: PaidOvertimeStepProps) {
+  const [localErrors, setLocalErrors] = useState<Partial<PaidOvertimeStepProps['formData']>>({});
+
+  const validateStep = (): boolean => {
+    const newErrors: Partial<PaidOvertimeStepProps['formData']> = {};
+    if (!formData.overtimePaid) newErrors.overtimePaid = 'Please select an option';
+    if (formData.overtimePaid === 'other' && !formData.otherOvertimeDetails.trim()) {
+      newErrors.otherOvertimeDetails = 'Please provide details';
+    }
+
+    setLocalErrors(newErrors);
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleRadioChange = (value: string) => {
+    updateFormData({ overtimePaid: value });
+  };
+
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    updateFormData({ otherOvertimeDetails: e.target.value });
+  };
+
+  useEffect(() => {
+    setAIContext(`The user has indicated that their overtime payment status is: ${formData.overtimePaid}
+      ${formData.overtimePaid === 'other' ? `Additional details: ${formData.otherOvertimeDetails}` : ''}
+      Please analyze this information and provide guidance on potential overtime violations.`);
+  }, [formData, setAIContext]);
+
+  useEffect(() => {
+    if (validateStep()) {
+      triggerAIValidation();
+    }
+  }, [formData]);
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -36,7 +61,7 @@ export const PaidOvertimeStep: React.FC<PaidOvertimeStepProps> = ({
         </Label>
         <RadioGroup 
           value={formData.overtimePaid} 
-          onValueChange={(value) => handleRadioChange('overtimePaid', value)} 
+          onValueChange={handleRadioChange} 
           className="flex flex-col space-y-1"
         >
           <div className="flex items-center space-x-2">
@@ -52,7 +77,7 @@ export const PaidOvertimeStep: React.FC<PaidOvertimeStepProps> = ({
             <Label className='text-base' htmlFor="other">Other</Label>
           </div>
         </RadioGroup>
-        {errors.overtimePaid && <p className="text-red-500 text-sm">{errors.overtimePaid}</p>}
+        {localErrors.overtimePaid && <p className="text-red-500 text-sm">{localErrors.overtimePaid}</p>}
       </div>
       {formData.overtimePaid === 'other' && (
         <div className="space-y-2">
@@ -60,13 +85,13 @@ export const PaidOvertimeStep: React.FC<PaidOvertimeStepProps> = ({
             name="otherOvertimeDetails"
             placeholder="Please provide details about your overtime pay situation..."
             value={formData.otherOvertimeDetails}
-            onChange={handleFormInputChange}
+            onChange={handleTextareaChange}
             required
             className='text-base min-h-[100px] border-none outline-none bg-[#ececec] shadow-sm h-10 rounded-xl focus:outline-[#d6e9fd] focus:border-[#d6e9fd]'
           />
-          {errors.otherOvertimeDetails && <p className="text-red-500 text-sm">{errors.otherOvertimeDetails}</p>}
+          {localErrors.otherOvertimeDetails && <p className="text-red-500 text-sm">{localErrors.otherOvertimeDetails}</p>}
         </div>
       )}
     </div>
   );
-};
+}

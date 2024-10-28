@@ -1,7 +1,9 @@
 // WeeklyWageStep component handles collecting and displaying weekly wage information
 // Uses a slider input with min/max bounds and calculates implied annual salary
 // Shows warning for highly compensated employees who may be exempt from protections
-import React from 'react'
+'use client'
+
+import React, { useState, useEffect } from 'react'
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { InfoButton } from "@/components/ui/info-button"
@@ -10,10 +12,39 @@ interface WeeklyWageStepProps {
   formData: {
     weeklyWage: number;
   };
-  handleSliderChange: (value: number[]) => void;
+  updateFormData: (newData: Partial<WeeklyWageStepProps['formData']>) => void;
+  setErrors: React.Dispatch<React.SetStateAction<Partial<WeeklyWageStepProps['formData']>>>;
+  setAIContext: React.Dispatch<React.SetStateAction<string>>;
+  triggerAIValidation: () => void;
 }
 
-export function WeeklyWageStep({ formData, handleSliderChange }: WeeklyWageStepProps) {
+export function WeeklyWageStep({ formData, updateFormData, setErrors, setAIContext, triggerAIValidation }: WeeklyWageStepProps) {
+  const [localErrors, setLocalErrors] = useState<Partial<WeeklyWageStepProps['formData']>>({});
+
+  const validateStep = (): boolean => {
+    const newErrors: Partial<WeeklyWageStepProps['formData']> = {};
+    if (formData.weeklyWage <= 0) newErrors.weeklyWage = 0; // Changed to 0 instead of string
+
+    setLocalErrors(newErrors);
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSliderChange = (value: number[]) => {
+    updateFormData({ weeklyWage: value[0] });
+  };
+
+  useEffect(() => {
+    setAIContext(`The user's weekly wage is $${formData.weeklyWage}.
+      Please analyze this information in the context of minimum wage laws and potential overtime violations.`);
+  }, [formData, setAIContext]);
+
+  useEffect(() => {
+    if (validateStep()) {
+      triggerAIValidation();
+    }
+  }, [formData]);
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -40,6 +71,7 @@ export function WeeklyWageStep({ formData, handleSliderChange }: WeeklyWageStepP
           You are likely a highly compensated employee &amp; thus, exempt from many labor protections. Let&apos;s continue anyway.
         </p>
       )}
+      {localErrors.weeklyWage && <p className="text-red-500 text-sm">{localErrors.weeklyWage}</p>}
     </div>
   )
 }

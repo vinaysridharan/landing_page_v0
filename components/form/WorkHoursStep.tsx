@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useState, useEffect } from 'react'
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -11,16 +13,52 @@ interface WorkHoursStepProps {
     role: string;
     otherRoleDetails: string;
   };
-  errors: {
-    role?: string;
-    otherRoleDetails?: string;
-  };
-  handleSliderChange: (value: number[]) => void;
-  handleRadioChange: (name: string, value: string) => void;
-  handleFormInputChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  updateFormData: (newData: Partial<WorkHoursStepProps['formData']>) => void;
+  setErrors: React.Dispatch<React.SetStateAction<Partial<WorkHoursStepProps['formData']>>>;
+  setAIContext: React.Dispatch<React.SetStateAction<string>>;
+  triggerAIValidation: () => void;
 }
 
-export function WorkHoursStep({ formData, errors, handleSliderChange, handleRadioChange, handleFormInputChange }: WorkHoursStepProps) {
+export function WorkHoursStep({ formData, updateFormData, setErrors, setAIContext, triggerAIValidation }: WorkHoursStepProps) {
+  const [localErrors, setLocalErrors] = useState<Partial<WorkHoursStepProps['formData']>>({});
+
+  const validateStep = (): boolean => {
+    const newErrors: Partial<WorkHoursStepProps['formData']> = {};
+    if (!formData.role) newErrors.role = 'Please select a role';
+    if (formData.role === 'other' && !formData.otherRoleDetails.trim()) {
+      newErrors.otherRoleDetails = 'Please provide details';
+    }
+
+    setLocalErrors(newErrors);
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSliderChange = (value: number[]) => {
+    updateFormData({ hoursWorked: value[0] });
+  };
+
+  const handleRadioChange = (value: string) => {
+    updateFormData({ role: value });
+  };
+
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    updateFormData({ otherRoleDetails: e.target.value });
+  };
+
+  useEffect(() => {
+    setAIContext(`The user works ${formData.hoursWorked} hours per week on average.
+      Their role is described as: ${formData.role}
+      ${formData.role === 'other' ? `Additional role details: ${formData.otherRoleDetails}` : ''}
+      Please analyze this information for potential overtime violations and exemption status.`);
+  }, [formData, setAIContext]);
+
+  useEffect(() => {
+    if (validateStep()) {
+      triggerAIValidation();
+    }
+  }, [formData]);
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
@@ -48,7 +86,7 @@ export function WorkHoursStep({ formData, errors, handleSliderChange, handleRadi
         </p>
         {formData.hoursWorked < 40 ? (
           <p className="text-sm text-red-800 bg-red-100 p-2 rounded-md mt-2">
-            While you may not have worked overtime, let's see if you are potentially owed compensation for other violations like meal & rest breaks.
+            While you may not have worked overtime, let&apos;s see if you are potentially owed compensation for other violations like meal & rest breaks.
           </p>
         ) : formData.hoursWorked > 40 ? (
           <p className="text-sm text-blue-800 bg-blue-100 p-2 rounded-md mt-2">
@@ -61,7 +99,7 @@ export function WorkHoursStep({ formData, errors, handleSliderChange, handleRadi
           Which best describes your role?
           <InfoButton content="Your role in the company can affect your classification as exempt or non-exempt from certain labor protections." />
         </Label>
-        <RadioGroup value={formData.role} onValueChange={(value) => handleRadioChange('role', value)} className="flex flex-col space-y-1">
+        <RadioGroup value={formData.role} onValueChange={handleRadioChange} className="flex flex-col space-y-1">
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="routine" id="routine" />
             <Label htmlFor="routine">Do you mainly follow procedures or handle routine tasks?</Label>
@@ -72,10 +110,10 @@ export function WorkHoursStep({ formData, errors, handleSliderChange, handleRadi
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="other" id="other-role" />
-            <Label htmlFor="other-role">Other (I don't think either of these fit)</Label>
+            <Label htmlFor="other-role">Other (I don&apos;t think either of these fit)</Label>
           </div>
         </RadioGroup>
-        {errors.role && <p className="text-red-500 text-sm">{errors.role}</p>}
+        {localErrors.role && <p className="text-red-500 text-sm">{localErrors.role}</p>}
       </div>
       {formData.role === 'other' && (
         <div className="space-y-2">
@@ -83,11 +121,11 @@ export function WorkHoursStep({ formData, errors, handleSliderChange, handleRadi
             name="otherRoleDetails"
             placeholder="Please describe your role..."
             value={formData.otherRoleDetails}
-            onChange={handleFormInputChange}
+            onChange={handleTextareaChange}
             className="min-h-[100px]"
             required
           />
-          {errors.otherRoleDetails && <p className="text-red-500 text-sm">{errors.otherRoleDetails}</p>}
+          {localErrors.otherRoleDetails && <p className="text-red-500 text-sm">{localErrors.otherRoleDetails}</p>}
         </div>
       )}
     </div>

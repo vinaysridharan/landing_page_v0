@@ -63,6 +63,8 @@ export function CaseAssessmentForm() {
   const [shouldTriggerAI, setShouldTriggerAI] = useState(false);
   const searchParams = useSearchParams()
   const [isSettingContext, setIsSettingContext] = useState(false);
+  const [isAILoading, setIsAILoading] = useState(false);
+  const [aiDecision, setAiDecision] = useState(false);
 
   useEffect(() => {
     setProgress(((step + 1) / 7) * 100)
@@ -84,6 +86,18 @@ export function CaseAssessmentForm() {
       console.log("AI should be triggered with context:", aiContext);
     }
   }, [shouldTriggerAI, aiContext]);
+
+  useEffect(() => {
+    console.log(`Step changed to: ${step}`);
+  }, [step]);
+
+  useEffect(() => {
+    console.log(`AI Context changed: ${aiContext}`);
+  }, [aiContext]);
+
+  useEffect(() => {
+    console.log(`Can Proceed: ${canProceed}`);
+  }, [canProceed]);
 
   const handleFormInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -151,9 +165,15 @@ export function CaseAssessmentForm() {
     setStep(0);
   }
 
-  const handleNext = async () => {
-    if (!validateStep()) return
+  const handleAIResponse = (decision: boolean) => {
+    console.log(`AI Response received. Decision: ${decision}`);
+    setAiDecision(decision);
+    setCanProceed(true); // Allow manual progression
+    setIsAILoading(false);
+  }
 
+  const handleNext = async () => {
+    console.log(`Attempting to move to next step. Current step: ${step}`);
     setIsSettingContext(true);
     let newContext = '';
 
@@ -171,62 +191,95 @@ export function CaseAssessmentForm() {
           If there are instead obvious issues, like a "555" number, flag them for the user and ask them to correct it before moving forward.`;
         break;
       case 1:
-        newContext = 'whatsup';
+        newContext = 'Tell them you need to get paid 1.5x your hourly for any overtime';
+        break;
+      case 2:
+        newContext = 'Note that this is a placeholder';
+        break;
+      case 3:
+        newContext = 'Tell them you need to get paid 1.5x your hourly for any overtime';
+        break;
+      case 4:
+        newContext = 'Tell them you need to get paid 1.5x your hourly for any overtime';
+        break;
+      case 5:
+        newContext = 'Tell them you need to get paid 1.5x your hourly for any overtime';
         break;
       // ... set context for other steps
     }
+    console.log(`Setting new AI context: ${newContext}`);
     setShowAIBot(true);
     setAIContext(newContext);
     setIsSettingContext(false);
-    setShouldTriggerAI(true); // Set the trigger to true
+    setShouldTriggerAI(true);
+    setCanProceed(false);
+    setIsAILoading(true);
+    setAiDecision(false);
   }
 
   const handlePrevious = () => {
-    if (step === 1) {
-      handleCollapse();
-    } else {
-      setStep(prev => prev - 1);
-    }
+
+    setStep(prev => prev - 1);
   }
+
+  const updateFormData = (newData: Partial<FormData>) => {
+    setFormData(prev => ({ ...prev, ...newData }));
+  };
+
+  const triggerAIValidation = () => {
+    setShouldTriggerAI(true);
+  };
 
   const renderForm = () => {
     switch (step) {
       case 0:
         return (
-          <ContactFormStep 
+          <ContactFormStep
             formData={formData}
-            errors={errors}
-            handleFormInputChange={handleFormInputChange}
+            updateFormData={updateFormData}
+            setErrors={setErrors}
+            setAIContext={setAIContext}
+            triggerAIValidation={triggerAIValidation}
           />
         )
       case 1:
         return (
-          <PaidOvertimeStep 
+          <PaidOvertimeStep
             formData={formData}
-            errors={errors}
-            handleRadioChange={handleRadioChange}
-            handleFormInputChange={handleFormInputChange}
+            updateFormData={updateFormData}
+            setErrors={setErrors}
+            setAIContext={setAIContext}
+            triggerAIValidation={triggerAIValidation}
           />
         )
       case 2:
         return (
           <WeeklyWageStep
             formData={formData}
-            handleSliderChange={handleSliderChange}
+            updateFormData={updateFormData}
+            setErrors={setErrors}
+            setAIContext={setAIContext}
+            triggerAIValidation={triggerAIValidation}
           />
         )
       case 3:
         return (
           <EmployerInfoStep
             formData={formData}
-            errors={errors}
-            handleFormInputChange={handleFormInputChange}
+            updateFormData={updateFormData}
+            setErrors={setErrors}
+            setAIContext={setAIContext}
+            triggerAIValidation={triggerAIValidation}
           />
         )
       case 4:
         return (
           <EmployerConfirmationStep
             formData={formData}
+            updateFormData={updateFormData} 
+            setErrors={setErrors}
+            setAIContext={setAIContext}
+            triggerAIValidation={triggerAIValidation}
             handleNext={handleNext}
             setStep={setStep}
           />
@@ -235,10 +288,10 @@ export function CaseAssessmentForm() {
         return (
           <WorkHoursStep
             formData={formData}
-            errors={errors}
-            handleSliderChange={handleSliderChange}
-            handleRadioChange={handleRadioChange}
-            handleFormInputChange={handleFormInputChange}
+            updateFormData={updateFormData}
+            setErrors={setErrors}
+            setAIContext={setAIContext}
+            triggerAIValidation={triggerAIValidation}
           />
         )
       case 6:
@@ -250,24 +303,9 @@ export function CaseAssessmentForm() {
     }
   }
 
-  const handleAIResponse = (newCanProceed: boolean) => {
-    // Log the AI's decision for debugging purposes
-    console.log("AI decision for canProceed:", newCanProceed);
-
-    // Only update state if the new value is different from current state
-    if (newCanProceed !== canProceed) {
-      setCanProceed(newCanProceed);
-      
-      // If AI says we can proceed, move to next step
-      if (newCanProceed) {
-        setStep(prevStep => prevStep + 1);
-      }
-    }
-  }
-
   return (
-    <motion.div 
-      className="mx-auto relative overflow-hidden"
+    <motion.div
+      className="mx-auto relative overflow-visible"
       initial={false}
       animate={{
         height: isExpanded ? '100vh' : '600px',
@@ -300,8 +338,8 @@ export function CaseAssessmentForm() {
         </Button>
       )}
 
-      <motion.main 
-        className={`flex-grow container mx-auto px-8 py-8 ${isExpanded ? 'max-w-2xl' : ''}`}
+      <motion.main
+        className={`flex-grow container mx-auto px-8 py-8 ${isExpanded ? 'max-w-2xl' : ''} relative`}
         initial={false}
         animate={{
           scale: isExpanded ? 1 : 0.95,
@@ -309,16 +347,7 @@ export function CaseAssessmentForm() {
         }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
       >
-        <div className="mx-auto">
-          {showAIBot && (
-            <AIBot 
-              context={aiContext} 
-              canProceed={canProceed}
-              setCanProceed={handleAIResponse}
-              shouldTriggerAI={shouldTriggerAI}
-              setShouldTriggerAI={setShouldTriggerAI}
-            />
-          )}
+        <div className="mx-auto relative">
           <Card className={`flex flex-col justify-between rounded-[30px] bg-white/90 border-blue-200 shadow-xl ${isExpanded ? 'min-h-[calc(100vh-4rem)]' : 'h-[540px]'}`}>
             <div>
               <CardHeader>
@@ -340,31 +369,49 @@ export function CaseAssessmentForm() {
                 </AnimatePresence>
               </CardContent>
             </div>
-            <CardFooter className="flex justify-between">
-              <Button
-                onClick={handlePrevious}
-                disabled={step === 0 || !canProceed}
-                variant="outline"
-                className="flex items-center"
-              >
-                <ChevronLeft className="mr-2 h-4 w-4" /> Previous
-              </Button>
-              <Button
-                onClick={handleNext}
-                disabled={step >= FINAL_STEP || !canProceed}
-                className="flex items-center"
-              >
-                {!canProceed ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    Next <ChevronRight className="ml-2 h-4 w-4" />
-                  </>
+            <CardFooter className="flex flex-col -mt-5">
+              <div className="flex justify-between w-full">
+                <Button
+                  onClick={handlePrevious}
+                  disabled={step === 0 || isAILoading}
+                  variant="outline"
+                  className="flex items-center"
+                >
+                  <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+                </Button>
+                <Button
+                  onClick={() => {
+                    handleNext();
+                    if (aiDecision) {
+                      console.log(`Moving to next step manually. Current step: ${step}`);
+                      setStep(prevStep => prevStep + 1);
+                    }
+                  }}
+                  disabled={step >= FINAL_STEP || (isAILoading && !aiDecision) || !canProceed}
+                  className="flex items-center"
+                >
+                  {isAILoading && !aiDecision ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      Next <ChevronRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              </div>
+              <div className="flex justify-center mt-4">
+                {showAIBot && (
+                  <AIBot
+                    context={aiContext}
+                    setCanProceed={handleAIResponse}
+                    shouldTriggerAI={shouldTriggerAI}
+                    setShouldTriggerAI={setShouldTriggerAI}
+                  />
                 )}
-              </Button>
+              </div>
             </CardFooter>
           </Card>
         </div>
