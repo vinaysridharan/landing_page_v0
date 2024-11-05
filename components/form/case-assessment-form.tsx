@@ -284,6 +284,7 @@ export function CaseAssessmentForm() {
             setStep={setStep}
           />
         )
+        
       case 5:
         return (
           <WorkHoursStep

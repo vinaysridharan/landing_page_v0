@@ -13,8 +13,7 @@ interface EmployerConfirmationStepProps {
   handleNext: () => void;
   setStep: React.Dispatch<React.SetStateAction<number>>;
 }
-
-export function EmployerConfirmationStep({ formData, setAIContext, triggerAIValidation, handleNext, setStep }: EmployerConfirmationStepProps) {
+export function EmployerConfirmationStep({ formData, updateFormData, setErrors, setAIContext, triggerAIValidation, handleNext, setStep }: EmployerConfirmationStepProps) {
   return (
     <div className="space-y-4">
       <p className="text-lg font-medium">Employer: {formData.employerName}</p>
@@ -23,6 +22,7 @@ export function EmployerConfirmationStep({ formData, setAIContext, triggerAIVali
       <div className="flex space-x-4">
         <Button onClick={handleNext} className="flex-1">
           Yes, that&apos;s correct
+          
         </Button>
         <Button onClick={() => setStep(3)} variant="outline" className="flex-1">
           No, I need to edit
