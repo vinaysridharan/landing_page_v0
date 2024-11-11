@@ -12,24 +12,39 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 
+function debounce(fn, ms) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), ms);
+  };
+}
+
 export function Header() {
   const [open, setOpen] = useState(false)
   const [showRedBar, setShowRedBar] = useState(true)
+  const [lastScrollDirection, setLastScrollDirection] = useState(null)
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
+    const handleScroll = debounce(() => {
+      const currentScrollY = window.scrollY
+      const isScrollingDown = currentScrollY > lastScrollDirection
+
+      if (isScrollingDown && currentScrollY > 70) {
         setShowRedBar(false)
-      } else {
+      } else if (!isScrollingDown && currentScrollY < 30) {
         setShowRedBar(true)
       }
-    }
+
+      setLastScrollDirection(currentScrollY)
+    }, 100) // Adjust debounce delay as needed
 
     window.addEventListener('scroll', handleScroll)
+
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [])
+  }, [lastScrollDirection])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

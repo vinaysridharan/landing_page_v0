@@ -37,7 +37,7 @@ export default function Page() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <div key={index} className="site-card-bg rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col items-center">
+            <div className="site-card-bg rounded-lg shadow-xl p-8 text-center transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 flex flex-col items-center justify-between h-full">
               <Image
                 src={step.src}
                 alt={step.alt}
@@ -51,6 +51,7 @@ export default function Page() {
           </motion.div>
         ))}
       </div>
+
     </div>
   );
 }
