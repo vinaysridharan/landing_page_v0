@@ -91,7 +91,7 @@ export default function AnimatedLandingPageComponent() {
                 </div>
               </section>
 
-              <motion.div className='my-10' variants={zoomIn}>
+              <motion.div className='my-10 w-full overflow-hidden' variants={zoomIn}>
                 <QuoteComponent />
               </motion.div>
 
